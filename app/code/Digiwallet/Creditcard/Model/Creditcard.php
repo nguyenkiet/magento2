@@ -214,7 +214,7 @@ class Creditcard extends \Magento\Payment\Model\Method\AbstractMethod
 
         $orderId = $order->getRealOrderId();
         $language = ($this->localeResolver->getLocale() == 'nl_NL') ? "nl" : "en";
-        $testMode = (bool) $this->_scopeConfig->getValue('payment/creditcard/testmode');
+        $testMode = false;//(bool) $this->_scopeConfig->getValue('payment/creditcard/testmode');
         
         $digiCore = new TargetPayCore(
             $this->tpMethod,
@@ -309,7 +309,7 @@ class Creditcard extends \Magento\Payment\Model\Method\AbstractMethod
         $refundObj = new TargetPayRefund(self::METHOD_TYPE, $amount, $api_token, $payment, $this->resoureConnection);
         $refundObj->setLanguage(($this->localeResolver->getLocale() == 'nl_NL') ? "nl" : "en");
         $refundObj->setLayoutCode($this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/rtlo'));
-        $refundObj->setTestMode((bool) $this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/testmode'));
+        $refundObj->setTestMode(false);//(bool) $this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/testmode'));
         $refundObj->refund();
     }
 }

@@ -137,7 +137,7 @@ class PaysafeBaseAction extends \Magento\Framework\App\Action\Action
         }
 
         $language = ($this->localeResolver->getLocale() == 'nl_NL') ? 'nl' : 'en';
-        $testMode = (bool) $this->scopeConfig->getValue('payment/paysafecard/testmode');
+        $testMode = false;//(bool) $this->scopeConfig->getValue('payment/paysafecard/testmode');
         $digiCore = new TargetPayCore(
             $this->paysafecard->getMethodType(),
             $this->scopeConfig->getValue('payment/paysafecard/rtlo'),

@@ -348,7 +348,8 @@ class TargetPayCore
         $url .= "&bank=" . urlencode($this->bankId);
         $url .= "&amount=" . urlencode($this->amount);
         $url .= "&description=" . urlencode($this->description);
-        $url .= "&test=" . $this->testMode;
+        // Remove test param
+        //$url .= "&test=" . $this->testMode;
         $url .= "&userip=" . urlencode($_SERVER["REMOTE_ADDR"]);
         $url .= "&domain=" . urlencode($_SERVER["HTTP_HOST"]);
         $url .= "&returnurl=" . urlencode($this->returnUrl);

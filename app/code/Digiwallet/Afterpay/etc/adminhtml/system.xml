@@ -33,11 +33,10 @@
 					<label>New Order Status</label>
 					<source_model>Magento\Sales\Model\Config\Source\Order\Status\NewStatus</source_model>
 				</field>
-				<field id="testmode" translate="label" type="select"
+				<field id="testmode" translate="label" type="label"
 					sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
-					<label>Test mode (Yes means: canceled payments will also be
-						accepted)</label>
-					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+					<label>Test mode</label>
+					<comment>You can enable test-mode for your outlet from your DigiWallet Organization Dashboard to test your payments through the DigiWallet Test Panel.</comment>
 				</field>
 			</group>
 		</section>

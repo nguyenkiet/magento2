@@ -137,7 +137,7 @@ class CreditcardBaseAction extends \Magento\Framework\App\Action\Action
         }
 
         $language = ($this->localeResolver->getLocale() == 'nl_NL') ? 'nl' : 'en';
-        $testMode = (bool) $this->scopeConfig->getValue('payment/creditcard/testmode');
+        $testMode = false;//(bool) $this->scopeConfig->getValue('payment/creditcard/testmode');
         $digiCore = new TargetPayCore(
             $this->creditcard->getMethodType(),
             $this->scopeConfig->getValue('payment/creditcard/rtlo'),

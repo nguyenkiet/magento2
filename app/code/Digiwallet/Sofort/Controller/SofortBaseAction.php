@@ -136,7 +136,7 @@ class SofortBaseAction extends \Magento\Framework\App\Action\Action
         }
 
         $language = ($this->localeResolver->getLocale() == 'nl_NL') ? 'nl' : 'en';
-        $testMode = (bool) $this->scopeConfig->getValue('payment/sofort/testmode');
+        $testMode = false;//(bool) $this->scopeConfig->getValue('payment/sofort/testmode');
         $digiCore = new TargetPayCore(
             $this->sofort->getMethodType(),
             $this->scopeConfig->getValue('payment/sofort/rtlo'),

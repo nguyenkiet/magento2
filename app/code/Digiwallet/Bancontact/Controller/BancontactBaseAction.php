@@ -139,7 +139,7 @@ class BancontactBaseAction extends \Magento\Framework\App\Action\Action
         }
 
         $language = ($this->localeResolver->getLocale() == 'nl_NL') ? 'nl' : 'en';
-        $testMode = (bool) $this->scopeConfig->getValue('payment/bancontact/testmode');
+        $testMode = false;//(bool) $this->scopeConfig->getValue('payment/bancontact/testmode');
         $digiCore = new TargetPayCore(
             $this->bancontact->getMethodType(),
             $this->scopeConfig->getValue('payment/bancontact/rtlo'),

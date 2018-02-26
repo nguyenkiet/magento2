@@ -105,7 +105,7 @@ class DPaypalBaseAction extends \Magento\Framework\App\Action\Action
     public function checkTargetPayResult($txId, $orderId)
     {
         $language = ($this->localeResolver->getLocale() == 'nl_NL') ? 'nl' : 'en';
-        $testMode = (bool) $this->scopeConfig->getValue('payment/dpaypal/testmode');
+        $testMode = false;//(bool) $this->scopeConfig->getValue('payment/dpaypal/testmode');
         $digiCore = new TargetPayCore(
             $this->dpaypal->getMethodType(),
             $this->scopeConfig->getValue('payment/dpaypal/rtlo'),

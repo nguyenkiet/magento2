@@ -371,7 +371,7 @@ class Afterpay extends \Magento\Payment\Model\Method\AbstractMethod
 
         $orderId = $order->getRealOrderId();
         $language = ($this->localeResolver->getLocale() == 'nl_NL') ? "nl" : "en";
-        $testMode = (bool) $this->_scopeConfig->getValue('payment/afterpay/testmode');
+        $testMode = false;//(bool) $this->_scopeConfig->getValue('payment/afterpay/testmode');
 
         $digiCore = new TargetPayCore($this->tpMethod, $this->_scopeConfig->getValue('payment/afterpay/rtlo'), $language, $testMode);
         $digiCore->setAmount(round($order->getGrandTotal() * 100));
@@ -413,8 +413,6 @@ class Afterpay extends \Magento\Payment\Model\Method\AbstractMethod
                 'taxCategory' => 1
             ];
         }
-        // Add description line
-        $digiCore->bindParam('description', "Order#".$order->getRealOrderId());
         // Add invoice line to payment
         if($invoice_lines != null && !empty($invoice_lines)){
             $digiCore->bindParam('invoicelines', json_encode($invoice_lines));
@@ -428,47 +426,51 @@ class Afterpay extends \Magento\Payment\Model\Method\AbstractMethod
         $billing_addresses = ($billingAddress == null ? array() : $billingAddress->getStreet());
         $billing_address_1 = count($billing_addresses) > 0 ? $billing_addresses[0] : "";
         $billing_address_2 = count($billing_addresses) > 1 ? $billing_addresses[1] : "";
-        $streetParts = self::breakDownStreet("");
-        if(empty($billing_address_2)) {
-            $streetParts = self::breakDownStreet($billing_address_1);
+        if(empty($billing_address_1)) {
+            $billing_address_1 = $billing_address_2;
         }
-        
+        $streetParts = self::breakDownStreet($billing_address_1);
+
         $digiCore->bindParam('billingstreet', empty($streetParts['street']) ? $billing_address_1 : $streetParts['street']);
-        $digiCore->bindParam('billinghousenumber', empty($streetParts['houseNumber'].$streetParts['houseNumberAdd']) ? $billing_address_2 : $streetParts['houseNumber'].$streetParts['houseNumberAdd']);
         $digiCore->bindParam('billingpostalcode', $billingAddress == null ? "" : str_replace(" ", "", $billingAddress->getPostcode()));
         $digiCore->bindParam('billingcity', $billingAddress == null ? "" : $billingAddress->getCity());
         $digiCore->bindParam('billingpersonemail', $billingAddress == null ? "" : $billingAddress->getEmail());
         $digiCore->bindParam('billingpersoninitials', "");
         $digiCore->bindParam('billingpersongender', "");
+        // Update first name for billing address
         $digiCore->bindParam('billingpersonfirstname', $billingAddress == null ? "" : $billingAddress->getFirstname());
         $digiCore->bindParam('billingpersonsurname', $billingAddress == null ? "" : $billingAddress->getLastname());
         $digiCore->bindParam('billingcountrycode', $billingCountry);
         $digiCore->bindParam('billingpersonlanguagecode', $billingCountry);
         $digiCore->bindParam('billingpersonbirthdate', "");
         $digiCore->bindParam('billingpersonphonenumber', self::format_phone($billingCountry, $billingAddress == null ? "" : $billingAddress->getTelephone()));
+        // Add house number for billing address
+        $digiCore->bindParam('billinghousenumber', (!empty($streetParts['houseNumber']) || !empty($streetParts['houseNumberAdd'])) ? ($streetParts['houseNumber'] . ' ' . $streetParts['houseNumberAdd']) : $billing_address_1);
+
         // Build shipping address
         $shipping_addresses = $shippingAddress == null ? array() : $shippingAddress->getStreet();
         $shipping_address_1 = count($shipping_addresses) > 0 ? $shipping_addresses[0] : "";
         $shipping_address_2 = count($shipping_addresses) > 1 ? $shipping_addresses[1] : "";
-        $streetParts = self::breakDownStreet("");
-        if(empty($shipping_address_2)){
-            $streetParts = self::breakDownStreet($shipping_address_1);
+        if(empty($shipping_address_1)){
+            $shipping_address_1 = $shipping_address_2;
         }
+        $streetParts = self::breakDownStreet($shipping_address_1);
+
         $digiCore->bindParam('shippingstreet', empty($streetParts['street']) ? $shipping_address_1 : $streetParts['street']);
-        $digiCore->bindParam('shippinghousenumber', empty($streetParts['houseNumber'].$streetParts['houseNumberAdd']) ? $shipping_address_2 : $streetParts['houseNumber'].$streetParts['houseNumberAdd']);
-        $digiCore->bindParam('shippinghousenumber', "");
         $digiCore->bindParam('shippingpostalcode', $shippingAddress == null ? "" : str_replace(" ", "", $shippingAddress->getPostcode()));
         $digiCore->bindParam('shippingcity', $shippingAddress == null ? "" : $shippingAddress->getCity());
         $digiCore->bindParam('shippingpersonemail', $shippingAddress == null ? "" : $shippingAddress->getEmail());
         $digiCore->bindParam('shippingpersoninitials', "");
         $digiCore->bindParam('shippingpersongender', "");
+        // Update first name for shipping address
         $digiCore->bindParam('billingpersonfirstname', $shippingAddress == null ? "" : $shippingAddress->getFirstname());
         $digiCore->bindParam('shippingpersonsurname', $shippingAddress == null ? "" : $shippingAddress->getLastname());
         $digiCore->bindParam('shippingcountrycode', $shippingCountry);
         $digiCore->bindParam('shippingpersonlanguagecode', $shippingCountry);
         $digiCore->bindParam('shippingpersonbirthdate', "");
         $digiCore->bindParam('shippingpersonphonenumber', self::format_phone($shippingCountry, $shippingAddress == null ? "" : $shippingAddress->getTelephone()));
-
+        // Add house number for shipping address
+        $digiCore->bindParam('shippinghousenumber', (!empty($streetParts['houseNumber']) || !empty($streetParts['houseNumberAdd'])) ? ($streetParts['houseNumber'] . ' ' . $streetParts['houseNumberAdd']) : $shipping_address_1);
         // Start payment
         $result = @$digiCore->startPayment();
 
@@ -615,7 +617,7 @@ class Afterpay extends \Magento\Payment\Model\Method\AbstractMethod
         $refundObj = new TargetPayRefund(self::METHOD_TYPE, $amount, $api_token, $payment, $this->resoureConnection);
         $refundObj->setLanguage(($this->localeResolver->getLocale() == 'nl_NL') ? "nl" : "en");
         $refundObj->setLayoutCode($this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/rtlo'));
-        $refundObj->setTestMode((bool) $this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/testmode'));
+        $refundObj->setTestMode(false);//(bool) $this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/testmode'));
         $refundObj->refund();
     }
 }

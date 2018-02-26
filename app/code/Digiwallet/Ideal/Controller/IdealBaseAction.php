@@ -139,7 +139,7 @@ class IdealBaseAction extends \Magento\Framework\App\Action\Action
         }
 
         $language = ($this->localeResolver->getLocale() == 'nl_NL') ? 'nl' : 'en';
-        $testMode = (bool) $this->scopeConfig->getValue('payment/ideal/testmode');
+        $testMode = false;//(bool) $this->scopeConfig->getValue('payment/ideal/testmode');
         $digiCore = new TargetPayCore(
             $this->ideal->getMethodType(),
             $this->scopeConfig->getValue('payment/ideal/rtlo'),
