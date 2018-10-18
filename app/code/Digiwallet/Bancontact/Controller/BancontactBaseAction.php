@@ -139,10 +139,10 @@ class BancontactBaseAction extends \Magento\Framework\App\Action\Action
         }
 
         $language = ($this->localeResolver->getLocale() == 'nl_NL') ? 'nl' : 'en';
-        $testMode = false;//(bool) $this->scopeConfig->getValue('payment/bancontact/testmode');
+        $testMode = false;//(bool) $this->scopeConfig->getValue('payment/bancontact/testmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         $digiCore = new TargetPayCore(
             $this->bancontact->getMethodType(),
-            $this->scopeConfig->getValue('payment/bancontact/rtlo'),
+            $this->scopeConfig->getValue('payment/bancontact/rtlo', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
             $language,
             $testMode
         );
@@ -207,7 +207,7 @@ class BancontactBaseAction extends \Magento\Framework\App\Action\Action
             $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
             $transport = $this->transportBuilder
                 ->setTemplateIdentifier(
-                    $this->scopeConfig->getValue('payment/bancontact/email_template/failure'),
+                    $this->scopeConfig->getValue('payment/bancontact/email_template/failure', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
                     $storeScope
                 )
                 ->setTemplateOptions([

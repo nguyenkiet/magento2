@@ -105,14 +105,14 @@ class BankwireBaseAction extends \Magento\Framework\App\Action\Action
     public function checkTargetPayResult($txId, $orderId)
     {
         $language = ($this->localeResolver->getLocale() == 'nl_NL') ? 'nl' : 'en';
-        $testMode = false;//(bool) $this->scopeConfig->getValue('payment/bankwire/testmode');
+        $testMode = false;//(bool) $this->scopeConfig->getValue('payment/bankwire/testmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         $digiCore = new TargetPayCore(
             $this->bankwire->getMethodType(),
-            $this->scopeConfig->getValue('payment/bankwire/rtlo'),
+            $this->scopeConfig->getValue('payment/bankwire/rtlo', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
             $language,
             $testMode
             );
-        $checksum = md5($txId . $this->scopeConfig->getValue('payment/bankwire/rtlo') . $this->bankwire->getSalt());
+        $checksum = md5($txId . $this->scopeConfig->getValue('payment/bankwire/rtlo', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) . $this->bankwire->getSalt());
         @$digiCore->checkPayment($txId, ['checksum' => $checksum, 'once' => 0]);
 
         $paymentStatus = (bool) $digiCore->getPaidStatus();
@@ -205,7 +205,7 @@ class BankwireBaseAction extends \Magento\Framework\App\Action\Action
             $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
             $transport = $this->transportBuilder
             ->setTemplateIdentifier(
-                $this->scopeConfig->getValue('payment/bankwire/email_template/failure'),
+                $this->scopeConfig->getValue('payment/bankwire/email_template/failure', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
                 $storeScope
                 )
                 ->setTemplateOptions([

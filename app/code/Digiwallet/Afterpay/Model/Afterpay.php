@@ -371,9 +371,9 @@ class Afterpay extends \Magento\Payment\Model\Method\AbstractMethod
 
         $orderId = $order->getRealOrderId();
         $language = ($this->localeResolver->getLocale() == 'nl_NL') ? "nl" : "en";
-        $testMode = false;//(bool) $this->_scopeConfig->getValue('payment/afterpay/testmode');
+        $testMode = false;//(bool) $this->_scopeConfig->getValue('payment/afterpay/testmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
 
-        $digiCore = new TargetPayCore($this->tpMethod, $this->_scopeConfig->getValue('payment/afterpay/rtlo'), $language, $testMode);
+        $digiCore = new TargetPayCore($this->tpMethod, $this->_scopeConfig->getValue('payment/afterpay/rtlo', \Magento\Store\Model\ScopeInterface::SCOPE_STORE), $language, $testMode);
         $digiCore->setAmount(round($order->getGrandTotal() * 100));
         $digiCore->setDescription("Order #$orderId");
         $digiCore->setReturnUrl($this->urlBuilder->getUrl('afterpay/afterpay/return', [
@@ -435,7 +435,7 @@ class Afterpay extends \Magento\Payment\Model\Method\AbstractMethod
         $digiCore->bindParam('billingpostalcode', $billingAddress == null ? "" : str_replace(" ", "", $billingAddress->getPostcode()));
         $digiCore->bindParam('billingcity', $billingAddress == null ? "" : $billingAddress->getCity());
         $digiCore->bindParam('billingpersonemail', $billingAddress == null ? "" : $billingAddress->getEmail());
-        $digiCore->bindParam('billingpersoninitials', "");
+        $digiCore->bindParam('billingpersoninitials', ((!empty($billingAddress->getFirstname())) ? substr($billingAddress->getFirstname(), 0, 1) : ""));
         $digiCore->bindParam('billingpersongender', "");
         // Update first name for billing address
         $digiCore->bindParam('billingpersonfirstname', $billingAddress == null ? "" : $billingAddress->getFirstname());
@@ -460,7 +460,7 @@ class Afterpay extends \Magento\Payment\Model\Method\AbstractMethod
         $digiCore->bindParam('shippingpostalcode', $shippingAddress == null ? "" : str_replace(" ", "", $shippingAddress->getPostcode()));
         $digiCore->bindParam('shippingcity', $shippingAddress == null ? "" : $shippingAddress->getCity());
         $digiCore->bindParam('shippingpersonemail', $shippingAddress == null ? "" : $shippingAddress->getEmail());
-        $digiCore->bindParam('shippingpersoninitials', "");
+        $digiCore->bindParam('shippingpersoninitials', ((!empty($shippingAddress->getFirstname())) ? substr($shippingAddress->getFirstname(), 0, 1) : ""));
         $digiCore->bindParam('shippingpersongender', "");
         // Update first name for shipping address
         $digiCore->bindParam('billingpersonfirstname', $shippingAddress == null ? "" : $shippingAddress->getFirstname());
@@ -589,7 +589,7 @@ class Afterpay extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function canRefund()
     {
-        return !empty ($this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/apitoken'));
+        return !empty ($this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/apitoken', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
     }
     /**
      * Check partial refund availability for invoice
@@ -599,7 +599,7 @@ class Afterpay extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function canRefundPartialPerInvoice()
     {
-        return !empty($this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/apitoken'));
+        return !empty($this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/apitoken', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
     }
     /**
      * Refund specified amount for payment
@@ -613,11 +613,11 @@ class Afterpay extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
-        $api_token = $this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/apitoken');
+        $api_token = $this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/apitoken', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         $refundObj = new TargetPayRefund(self::METHOD_TYPE, $amount, $api_token, $payment, $this->resoureConnection);
         $refundObj->setLanguage(($this->localeResolver->getLocale() == 'nl_NL') ? "nl" : "en");
-        $refundObj->setLayoutCode($this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/rtlo'));
-        $refundObj->setTestMode(false);//(bool) $this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/testmode'));
+        $refundObj->setLayoutCode($this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/rtlo', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+        $refundObj->setTestMode(false);//(bool) $this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/testmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
         $refundObj->refund();
     }
 }

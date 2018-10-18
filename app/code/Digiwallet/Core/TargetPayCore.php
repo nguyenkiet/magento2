@@ -7,7 +7,7 @@ namespace Digiwallet\Core;
  * @author Yellow Melon B.V.
  *         @url http://www.idealplugins.nl
  *         @release 29-09-2014
- *         @ver 2.5
+ *         @ver 2.5.2
  *        
  *         Changes:
  *        
@@ -24,7 +24,7 @@ namespace Digiwallet\Core;
 class TargetPayCore
 {
 
-    const APP_ID = 'dw_magento2.x_1.0.2'; // Adjust postfix version number with public plugin releases to Git version number
+    const APP_ID = 'dw_magento2.x_2.5.2'; // Adjust postfix version number with public plugin releases to Git version number
 
     const MIN_AMOUNT = 0.84;
 

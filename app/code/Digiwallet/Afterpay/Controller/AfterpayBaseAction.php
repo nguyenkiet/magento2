@@ -132,12 +132,12 @@ class AfterpayBaseAction extends \Magento\Framework\App\Action\Action
     public function checkTargetPayResult($txId, $orderId)
     {
         $language = ($this->localeResolver->getLocale() == 'nl_NL') ? 'nl' : 'en';
-        $testMode = false;//(bool) $this->scopeConfig->getValue('payment/afterpay/testmode');
+        $testMode = false;//(bool) $this->scopeConfig->getValue('payment/afterpay/testmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         $paymentStatus = false;
         
         $digiCore = new TargetPayCore(
             $this->afterpay->getMethodType(), 
-            $this->scopeConfig->getValue('payment/afterpay/rtlo'), 
+            $this->scopeConfig->getValue('payment/afterpay/rtlo', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
             $language, 
             $testMode
             );
@@ -214,7 +214,7 @@ class AfterpayBaseAction extends \Magento\Framework\App\Action\Action
             $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
             $transport = $this->transportBuilder
             ->setTemplateIdentifier(
-                $this->scopeConfig->getValue('payment/afterpay/email_template/failure'),
+                $this->scopeConfig->getValue('payment/afterpay/email_template/failure', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
                 $storeScope
                 )
                 ->setTemplateOptions([

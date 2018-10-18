@@ -139,10 +139,10 @@ class IdealBaseAction extends \Magento\Framework\App\Action\Action
         }
 
         $language = ($this->localeResolver->getLocale() == 'nl_NL') ? 'nl' : 'en';
-        $testMode = false;//(bool) $this->scopeConfig->getValue('payment/ideal/testmode');
+        $testMode = false;//(bool) $this->scopeConfig->getValue('payment/ideal/testmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         $digiCore = new TargetPayCore(
             $this->ideal->getMethodType(),
-            $this->scopeConfig->getValue('payment/ideal/rtlo'),
+            $this->scopeConfig->getValue('payment/ideal/rtlo', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
             $language,
             $testMode
         );
@@ -208,7 +208,7 @@ class IdealBaseAction extends \Magento\Framework\App\Action\Action
             $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
             $transport = $this->transportBuilder
                 ->setTemplateIdentifier(
-                    $this->scopeConfig->getValue('payment/ideal/email_template/failure'),
+                    $this->scopeConfig->getValue('payment/ideal/email_template/failure', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
                     $storeScope
                 )
                 ->setTemplateOptions([

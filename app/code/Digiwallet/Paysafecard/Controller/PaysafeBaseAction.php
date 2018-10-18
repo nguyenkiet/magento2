@@ -137,10 +137,10 @@ class PaysafeBaseAction extends \Magento\Framework\App\Action\Action
         }
 
         $language = ($this->localeResolver->getLocale() == 'nl_NL') ? 'nl' : 'en';
-        $testMode = false;//(bool) $this->scopeConfig->getValue('payment/paysafecard/testmode');
+        $testMode = false;//(bool) $this->scopeConfig->getValue('payment/paysafecard/testmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         $digiCore = new TargetPayCore(
             $this->paysafecard->getMethodType(),
-            $this->scopeConfig->getValue('payment/paysafecard/rtlo'),
+            $this->scopeConfig->getValue('payment/paysafecard/rtlo', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
             $language,
             $testMode
         );
@@ -206,7 +206,7 @@ class PaysafeBaseAction extends \Magento\Framework\App\Action\Action
             $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
             $transport = $this->transportBuilder
                 ->setTemplateIdentifier(
-                    $this->scopeConfig->getValue('payment/paysafecard/email_template/failure'),
+                    $this->scopeConfig->getValue('payment/paysafecard/email_template/failure', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
                     $storeScope
                 )
                 ->setTemplateOptions([

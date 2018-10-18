@@ -82,7 +82,7 @@ class Report extends AfterpayBaseAction
             /* Send failure payment email to customer */
             $currentOrder = $this->order->loadByIncrementId($orderId);
             $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
-            $transport = $this->transportBuilder->setTemplateIdentifier($this->scopeConfig->getValue('payment/afterpay/email_template/failure'), $storeScope)
+            $transport = $this->transportBuilder->setTemplateIdentifier($this->scopeConfig->getValue('payment/afterpay/email_template/failure', \Magento\Store\Model\ScopeInterface::SCOPE_STORE), $storeScope)
                 ->setTemplateOptions([
                 'area' => \Magento\Framework\App\Area::AREA_FRONTEND,
                 'store' => $currentOrder->getStoreId()

@@ -20,7 +20,7 @@
                     <label>Title</label>
                 </field>
                 <field id="rtlo" translate="label" type="text" sortOrder="4" 
-                	showInDefault="1" showInWebsite="1" showInStore="0">
+                	showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Digiwallet Outlet Identifier</label>
                 </field>
                 <field id="apitoken" translate="label" type="text" sortOrder="5" 

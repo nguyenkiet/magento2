@@ -247,11 +247,11 @@ class Sofort extends \Magento\Payment\Model\Method\AbstractMethod
 
         $orderId = $order->getRealOrderId();
         $language = ($this->localeResolver->getLocale() == 'nl_NL') ? "nl" : "en";
-        $testMode = false;//(bool) $this->_scopeConfig->getValue('payment/sofort/testmode');
+        $testMode = false;//(bool) $this->_scopeConfig->getValue('payment/sofort/testmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         
         $digiCore = new TargetPayCore(
             $this->tpMethod,
-            $this->_scopeConfig->getValue('payment/sofort/rtlo'),
+            $this->_scopeConfig->getValue('payment/sofort/rtlo', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
             $language,
             $testMode
         );
@@ -337,7 +337,7 @@ class Sofort extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function canRefund()
     {
-        return !empty ($this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/apitoken'));
+        return !empty ($this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/apitoken', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
     }
     /**
      * Check partial refund availability for invoice
@@ -347,7 +347,7 @@ class Sofort extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function canRefundPartialPerInvoice()
     {
-        return !empty($this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/apitoken'));
+        return !empty($this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/apitoken', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
     }
     /**
      * Refund specified amount for payment
@@ -361,11 +361,11 @@ class Sofort extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
-        $api_token = $this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/apitoken');
+        $api_token = $this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/apitoken', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         $refundObj = new TargetPayRefund(self::METHOD_TYPE, $amount, $api_token, $payment, $this->resoureConnection);
         $refundObj->setLanguage(($this->localeResolver->getLocale() == 'nl_NL') ? "nl" : "en");
-        $refundObj->setLayoutCode($this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/rtlo'));
-        $refundObj->setTestMode(false);//(bool) $this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/testmode'));
+        $refundObj->setLayoutCode($this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/rtlo', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+        $refundObj->setTestMode(false);//(bool) $this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/testmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
         $refundObj->refund();
     }
 }

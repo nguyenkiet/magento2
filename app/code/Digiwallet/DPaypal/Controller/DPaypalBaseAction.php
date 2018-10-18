@@ -105,10 +105,10 @@ class DPaypalBaseAction extends \Magento\Framework\App\Action\Action
     public function checkTargetPayResult($txId, $orderId)
     {
         $language = ($this->localeResolver->getLocale() == 'nl_NL') ? 'nl' : 'en';
-        $testMode = false;//(bool) $this->scopeConfig->getValue('payment/dpaypal/testmode');
+        $testMode = false;//(bool) $this->scopeConfig->getValue('payment/dpaypal/testmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         $digiCore = new TargetPayCore(
             $this->dpaypal->getMethodType(),
-            $this->scopeConfig->getValue('payment/dpaypal/rtlo'),
+            $this->scopeConfig->getValue('payment/dpaypal/rtlo', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
             $language,
             $testMode
             );
@@ -173,7 +173,7 @@ class DPaypalBaseAction extends \Magento\Framework\App\Action\Action
             $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
             $transport = $this->transportBuilder
             ->setTemplateIdentifier(
-                $this->scopeConfig->getValue('payment/dpaypal/email_template/failure'),
+                $this->scopeConfig->getValue('payment/dpaypal/email_template/failure', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
                 $storeScope
                 )
                 ->setTemplateOptions([

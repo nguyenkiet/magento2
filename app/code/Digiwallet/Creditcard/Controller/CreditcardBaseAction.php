@@ -137,10 +137,10 @@ class CreditcardBaseAction extends \Magento\Framework\App\Action\Action
         }
 
         $language = ($this->localeResolver->getLocale() == 'nl_NL') ? 'nl' : 'en';
-        $testMode = false;//(bool) $this->scopeConfig->getValue('payment/creditcard/testmode');
+        $testMode = false;//(bool) $this->scopeConfig->getValue('payment/creditcard/testmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         $digiCore = new TargetPayCore(
             $this->creditcard->getMethodType(),
-            $this->scopeConfig->getValue('payment/creditcard/rtlo'),
+            $this->scopeConfig->getValue('payment/creditcard/rtlo', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
             $language,
             $testMode
         );
@@ -205,7 +205,7 @@ class CreditcardBaseAction extends \Magento\Framework\App\Action\Action
             $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
             $transport = $this->transportBuilder
                 ->setTemplateIdentifier(
-                    $this->scopeConfig->getValue('payment/creditcard/email_template/failure'),
+                    $this->scopeConfig->getValue('payment/creditcard/email_template/failure', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
                     $storeScope
                 )
                 ->setTemplateOptions([

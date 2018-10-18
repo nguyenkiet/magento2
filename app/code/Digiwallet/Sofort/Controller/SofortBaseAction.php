@@ -136,10 +136,10 @@ class SofortBaseAction extends \Magento\Framework\App\Action\Action
         }
 
         $language = ($this->localeResolver->getLocale() == 'nl_NL') ? 'nl' : 'en';
-        $testMode = false;//(bool) $this->scopeConfig->getValue('payment/sofort/testmode');
+        $testMode = false;//(bool) $this->scopeConfig->getValue('payment/sofort/testmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         $digiCore = new TargetPayCore(
             $this->sofort->getMethodType(),
-            $this->scopeConfig->getValue('payment/sofort/rtlo'),
+            $this->scopeConfig->getValue('payment/sofort/rtlo', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
             $language,
             $testMode
         );
@@ -205,7 +205,7 @@ class SofortBaseAction extends \Magento\Framework\App\Action\Action
             $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
             $transport = $this->transportBuilder
                 ->setTemplateIdentifier(
-                    $this->scopeConfig->getValue('payment/sofort/email_template/failure'),
+                    $this->scopeConfig->getValue('payment/sofort/email_template/failure', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
                     $storeScope
                 )
                 ->setTemplateOptions([

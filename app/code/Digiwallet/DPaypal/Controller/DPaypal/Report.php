@@ -80,7 +80,7 @@ class Report extends DPaypalBaseAction
             $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
             $transport = $this->transportBuilder
                 ->setTemplateIdentifier(
-                    $this->scopeConfig->getValue('payment/dpaypal/email_template/failure'),
+                    $this->scopeConfig->getValue('payment/dpaypal/email_template/failure', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
                     $storeScope
                 )
                 ->setTemplateOptions([
