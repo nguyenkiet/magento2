@@ -239,6 +239,7 @@ class Paysafecard extends \Magento\Payment\Model\Method\AbstractMethod
 
         $db = $this->resoureConnection->getConnection();
         $tableName   = $this->resoureConnection->getTableName('digiwallet_transaction');
+        $db->delete($tableName, ['order_id = ?' => $db->quote($orderId)]);
         $db->query("
             INSERT INTO ".$tableName." SET 
             `order_id`=" . $db->quote($orderId).",
@@ -268,8 +269,11 @@ class Paysafecard extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function getOrder()
     {
+        return $this->checkoutSession->getLastRealOrder();
+        /*
         $orderId = $this->checkoutSession->getLastOrderId();
         return $this->order->load($orderId);
+        */
     }
     /**
      * Check refund availability

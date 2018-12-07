@@ -244,6 +244,7 @@ class Bankwire extends \Magento\Payment\Model\Method\AbstractMethod
         // Format Ex: XXXX-XX-YY-ZZZZ|5940.74.231|NL44ABNA0594074231|ABNANL2A|St. Derdengelden TargetMedia|ABN Amro        
         $db = $this->resoureConnection->getConnection();
         $tableName   = $this->resoureConnection->getTableName('digiwallet_transaction');
+        $db->delete($tableName, ['order_id = ?' => $db->quote($orderId)]);
         $db->query("
         INSERT INTO ".$tableName." SET
             `order_id`=" . $db->quote($orderId).",
@@ -285,8 +286,11 @@ class Bankwire extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function getOrder()
     {
+        return $this->checkoutSession->getLastRealOrder();
+        /*
         $orderId = $this->checkoutSession->getLastOrderId();
         return $this->order->load($orderId);
+        */
     }
     /**
      * Check refund availability
