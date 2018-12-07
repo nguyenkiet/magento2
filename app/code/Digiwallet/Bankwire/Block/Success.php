@@ -32,7 +32,12 @@ class Success extends \Magento\Framework\View\Element\Template
      * @var \Magento\Framework\App\Http\Context
      */
     protected $httpContext;
-    
+
+    /**
+     * @var \Magento\Sales\Model\Order
+     */
+    protected $orderModel;
+
     private $orderRepository;
 
     /**
@@ -40,6 +45,7 @@ class Success extends \Magento\Framework\View\Element\Template
      * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param \Magento\Sales\Model\Order\Config $orderConfig
      * @param \Magento\Framework\App\Http\Context $httpContext
+     * @param \Magento\Sales\Model\Order $orderModel
      * @param array $data
      */
     public function __construct(
@@ -49,6 +55,7 @@ class Success extends \Magento\Framework\View\Element\Template
         \Magento\Sales\Model\Order\Config $orderConfig,
         \Magento\Sales\Model\OrderRepository $orderRepository,
         \Magento\Framework\App\Http\Context $httpContext,
+        \Magento\Sales\Model\Order $orderModel,
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -58,6 +65,7 @@ class Success extends \Magento\Framework\View\Element\Template
         $this->_isScopePrivate = true;
         $this->httpContext = $httpContext;
         $this->orderRepository = $orderRepository;
+        $this->orderModel = $orderModel;
     }
 
     /**
@@ -88,7 +96,8 @@ class Success extends \Magento\Framework\View\Element\Template
         
         if (count($result)) {
             list($trxid, $accountNumber, $iban, $bic, $beneficiary, $bank) = explode("|", $result[0]['more']);
-            $order = $this->orderRepository->get($result[0]['order_id']);      
+            $order = $this->orderModel->loadByIncrementId($result[0]['order_id']);
+            //$order = $this->orderRepository->get($result[0]['order_id']);
             $this->addData(
                 [
                     'trxid' => $trxid,

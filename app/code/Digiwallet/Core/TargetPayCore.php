@@ -4,18 +4,19 @@ namespace Digiwallet\Core;
 /**
  * @file Provides support for Digiwallet iDEAL, Mister Cash and Sofort Banking
  * 
- * @author Yellow Melon B.V.
- *         @url http://www.idealplugins.nl
+ * @author e-plugins.nl.
+ *         @url http://www.digiwallet.nl
  *         @release 29-09-2014
- *         @ver 2.5.2
+ *         @ver 2.5.3
  *        
  *         Changes:
  *        
- *         v2.1 Cancel url added
- *         v2.2 Verify Peer disabled, too many problems with this
- *         v2.3 Added paybyinvoice (achteraf betalen) and paysafecard (former Wallie)
- *         v2.4 Removed IP_range and deprecated checkReportValidity . Because it is bad practice.
- *         v2.5 Added creditcards by ATOS
+ *         v2.1 	Cancel url added
+ *         v2.2 	Verify Peer disabled, too many problems with this
+ *         v2.3 	Added paybyinvoice (achteraf betalen) and paysafecard (former Wallie)
+ *         v2.4 	Removed IP_range and deprecated checkReportValidity . Because it is bad practice.
+ *         v2.5 	Added creditcards by ATOS
+ *         v2.5.3 	fix multistore and bankwire outlet identifier    
  */
 
 /**
@@ -24,7 +25,7 @@ namespace Digiwallet\Core;
 class TargetPayCore
 {
 
-    const APP_ID = 'dw_magento2.x_2.5.2'; // Adjust postfix version number with public plugin releases to Git version number
+    const APP_ID = 'dw_magento2.x_2.5.3'; // Adjust postfix version number with public plugin releases to Git version number
 
     const MIN_AMOUNT = 0.84;
 
