@@ -92,7 +92,7 @@ class Success extends \Magento\Framework\View\Element\Template
         $sql = "SELECT * FROM ".$tableName."
                 WHERE `digi_txid` = " . $db->quote($trans_id) . "
                 AND method=" . $db->quote(Bankwire::METHOD_TYPE);
-        $result = $db->fetchAll($sql);  
+        $result = $db->fetchAll($sql);
         
         if (count($result)) {
             list($trxid, $accountNumber, $iban, $bic, $beneficiary, $bank) = explode("|", $result[0]['more']);
@@ -108,13 +108,13 @@ class Success extends \Magento\Framework\View\Element\Template
                     'bank' => $bank,
                     'order' => $order,
                     'email' => $this->hideCustomerEmail($order->getCustomerEmail())
-               ]
-           );
+                ]
+            );
         }
     }
    /**
     * Change customer email to format: e.g.(s******@***.com)
-    * 
+    *
     * @param string $email
     * @return string
     */
@@ -124,16 +124,16 @@ class Success extends \Magento\Framework\View\Element\Template
         $counter = 0;
         $result = "";
         foreach ($email as $char) {
-            if($counter == 0) {
+            if ($counter == 0) {
                 $result .= $char;
                 $counter++;
-            } else if($char == "@") {
+            } elseif ($char == "@") {
                 $result .= $char;
                 $counter++;
-            } else if($char == "." && $counter > 1) {
+            } elseif ($char == "." && $counter > 1) {
                 $result .= $char;
                 $counter++;
-            } else if($counter > 2) {
+            } elseif ($counter > 2) {
                 $result .= $char;
             } else {
                 $result .= "*";

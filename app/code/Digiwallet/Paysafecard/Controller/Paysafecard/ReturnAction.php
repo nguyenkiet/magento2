@@ -70,7 +70,7 @@ class ReturnAction extends PaysafeBaseAction
                 AND method=" . $db->quote($this->paysafecard->getMethodType());
         $result = $db->fetchAll($sql);
         $result = isset($result[0]['paid']) && $result[0]['paid'];
-        if(!$result) {
+        if (!$result) {
             // Check from Digiwallet API
             $result = parent::checkDigiwalletResult();
         }

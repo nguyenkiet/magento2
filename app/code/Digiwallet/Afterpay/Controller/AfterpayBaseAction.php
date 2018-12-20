@@ -61,7 +61,7 @@ class AfterpayBaseAction extends \Magento\Framework\App\Action\Action
 
     /**
      * Enrichment Url when satus is Incomplete
-     * 
+     *
      * @var unknown
      */
     protected $enrichment_url;
@@ -85,13 +85,13 @@ class AfterpayBaseAction extends \Magento\Framework\App\Action\Action
 
     /**
      *
-     * @param \Magento\Framework\App\Action\Context $context            
-     * @param \Magento\Framework\App\ResourceConnection $resourceConnection            
-     * @param \Magento\Backend\Model\Locale\Resolver $localeResolver            
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig            
-     * @param \Magento\Framework\DB\Transaction $transaction            
-     * @param \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder            
-     * @param \Magento\Sales\Model\Order $order            
+     * @param \Magento\Framework\App\Action\Context $context
+     * @param \Magento\Framework\App\ResourceConnection $resourceConnection
+     * @param \Magento\Backend\Model\Locale\Resolver $localeResolver
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Framework\DB\Transaction $transaction
+     * @param \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder
+     * @param \Magento\Sales\Model\Order $order
      * @param \Digiwallet\Afterpay\Model\Afterpay $afterpay
      * @param \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository
      * @param \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder
@@ -108,8 +108,8 @@ class AfterpayBaseAction extends \Magento\Framework\App\Action\Action
         \Digiwallet\Afterpay\Model\Afterpay $afterpay,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository,
-        \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder)
-    {
+        \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder
+    ) {
         parent::__construct($context);
         $this->resoureConnection = $resourceConnection;
         $this->checkoutSession = $checkoutSession;
@@ -126,7 +126,7 @@ class AfterpayBaseAction extends \Magento\Framework\App\Action\Action
     /**
      * *
      * Use to check order from target pay
-     * 
+     *
      * @return boolean
      */
     public function checkDigiwalletResult($txId, $orderId)
@@ -136,14 +136,16 @@ class AfterpayBaseAction extends \Magento\Framework\App\Action\Action
         $paymentStatus = false;
         
         $digiCore = new DigiwalletCore(
-            $this->afterpay->getMethodType(), 
+            $this->afterpay->getMethodType(),
             $this->scopeConfig->getValue('payment/afterpay/rtlo', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
-            $language, 
+            $language,
             $testMode
-            );
+        );
         $result = @$digiCore->checkPayment($txId);
         $result_code = substr($result, 0, 6);
-        if($result_code == "000000") {
+        /* @var \Magento\Sales\Model\Order $currentOrder */
+        $currentOrder = $this->order->loadByIncrementId($orderId);
+        if ($result_code == "000000") {
             $result = substr($result, 7);
             list ($invoiceKey, $invoicePaymentReference, $status) = explode("|", $result);
             if (strtolower($status) == "captured") {
@@ -159,8 +161,6 @@ class AfterpayBaseAction extends \Magento\Framework\App\Action\Action
                 $paymentStatus = true; // Always OK if in testmode
                 $this->getResponse()->setBody("Testmode... ");
             }
-            /* @var \Magento\Sales\Model\Order $currentOrder */
-            $currentOrder = $this->order->loadByIncrementId($orderId);
             if ($paymentStatus) {
                 $db = $this->resoureConnection->getConnection();
                 $tableName = $this->resoureConnection->getTableName('digiwallet_transaction');
@@ -169,13 +169,13 @@ class AfterpayBaseAction extends \Magento\Framework\App\Action\Action
                 AND method='" . $this->afterpay->getMethodType() . "'
                 AND `digi_txid` = '" . $txId . "'";
                 $db->query($sql);
-                if ($currentOrder->getState() != \Magento\Sales\Model\Order::STATE_PROCESSING)
-                {
-                    $payment_message = __('OrderId: %1 - Digiwallet transactionId: %2 - Total price: %3', 
-                        $orderId, 
-                        $txId, 
+                if ($currentOrder->getState() != \Magento\Sales\Model\Order::STATE_PROCESSING) {
+                    $payment_message = __(
+                        'OrderId: %1 - Digiwallet transactionId: %2 - Total price: %3',
+                        $orderId,
+                        $txId,
                         $currentOrder->getBaseCurrency()->formatTxt($currentOrder->getGrandTotal())
-                        );
+                    );
                     // Add transaction for refunable
                     $payment = $currentOrder->getPayment();
                     $payment->setLastTransId($txId);
@@ -201,9 +201,7 @@ class AfterpayBaseAction extends \Magento\Framework\App\Action\Action
                     $invoice->setSendEmail(true);
                     $currentOrder->save();
                     $this->getResponse()->setBody("Paid... ");
-                } 
-                else 
-                {
+                } else {
                     $this->getResponse()->setBody("Already completed, skipped... ");
                 }
                 return true;
@@ -216,7 +214,7 @@ class AfterpayBaseAction extends \Magento\Framework\App\Action\Action
             ->setTemplateIdentifier(
                 $this->scopeConfig->getValue('payment/afterpay/email_template/failure', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
                 $storeScope
-                )
+            )
                 ->setTemplateOptions([
                     'area' => \Magento\Framework\App\Area::AREA_FRONTEND,
                     'store' => $currentOrder->getStoreId(),

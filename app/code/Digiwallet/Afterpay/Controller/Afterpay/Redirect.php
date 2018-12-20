@@ -37,21 +37,20 @@ class Redirect extends \Magento\Framework\App\Action\Action
 
     /**
      *
-     * @param \Magento\Framework\App\Action\Context $context            
-     * @param \Digiwallet\Afterpay\Model\Afterpay $Afterpay            
-     * @param \Magento\Checkout\Model\Session $checkoutSession            
-     * @param \Psr\Log\LoggerInterface $logger            
+     * @param \Magento\Framework\App\Action\Context $context
+     * @param \Digiwallet\Afterpay\Model\Afterpay $Afterpay
+     * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param \Psr\Log\LoggerInterface $logger
      * @param \Magento\Framework\View\Result\PageFactory $resultPageFactory
      *            @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
-        \Magento\Framework\App\Action\Context $context, 
-        \Digiwallet\Afterpay\Model\Afterpay $afterpay, 
-        \Magento\Checkout\Model\Session $checkoutSession, 
-        \Psr\Log\LoggerInterface $logger, 
+        \Magento\Framework\App\Action\Context $context,
+        \Digiwallet\Afterpay\Model\Afterpay $afterpay,
+        \Magento\Checkout\Model\Session $checkoutSession,
+        \Psr\Log\LoggerInterface $logger,
         \Magento\Framework\View\Result\PageFactory $resultPageFactory
-        )
-    {
+    ) {
         parent::__construct($context);
         $this->checkoutSession = $checkoutSession;
         $this->logger = $logger;
@@ -75,7 +74,7 @@ class Redirect extends \Magento\Framework\App\Action\Action
             if (! empty($this->afterpay->getRedirectUrl())) {
                 // Redirect to host page
                 return $this->_redirect($this->afterpay->getRedirectUrl());
-            } else if (! empty($this->afterpay->getRejectedMessage())) {
+            } elseif (! empty($this->afterpay->getRejectedMessage())) {
                 // Show reject message
                 $this->messageManager->addExceptionMessage(new \Exception(), __("The order has been rejected with the reason: " . $this->afterpay->getRejectedMessage()));
             } else {

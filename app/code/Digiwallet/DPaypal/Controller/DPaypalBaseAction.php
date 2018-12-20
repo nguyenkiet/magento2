@@ -2,6 +2,7 @@
 namespace Digiwallet\DPaypal\Controller;
 
 use Digiwallet\Core\DigiwalletCore;
+
 /**
  * Digiwallet DPaypal Report Controller
  *
@@ -83,8 +84,7 @@ class DPaypalBaseAction extends \Magento\Framework\App\Action\Action
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository,
         \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder
-        ) 
-    {
+    ) {
             parent::__construct($context);
             $this->resoureConnection = $resourceConnection;
             $this->checkoutSession = $checkoutSession;
@@ -111,7 +111,7 @@ class DPaypalBaseAction extends \Magento\Framework\App\Action\Action
             $this->scopeConfig->getValue('payment/dpaypal/rtlo', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
             $language,
             $testMode
-            );
+        );
         @$digiCore->checkPayment($txId);
 
         $paymentStatus = (bool) $digiCore->getPaidStatus();
@@ -129,13 +129,13 @@ class DPaypalBaseAction extends \Magento\Framework\App\Action\Action
                 AND method='" . $this->dpaypal->getMethodType() . "'
                 AND `digi_txid` = '" . $txId . "'";
             $db->query($sql);
-            if ($currentOrder->getState() != \Magento\Sales\Model\Order::STATE_PROCESSING)
-            {
-                $payment_message = __('OrderId: %1 - Digiwallet transactionId: %2 - Total price: %3', 
-                    $orderId, 
-                    $txId, 
+            if ($currentOrder->getState() != \Magento\Sales\Model\Order::STATE_PROCESSING) {
+                $payment_message = __(
+                    'OrderId: %1 - Digiwallet transactionId: %2 - Total price: %3',
+                    $orderId,
+                    $txId,
                     $currentOrder->getBaseCurrency()->formatTxt($currentOrder->getGrandTotal())
-                    );
+                );
                 // Add transaction for refunable
                 $payment = $currentOrder->getPayment();
                 $payment->setLastTransId($txId);
@@ -161,9 +161,7 @@ class DPaypalBaseAction extends \Magento\Framework\App\Action\Action
                 $invoice->setSendEmail(true);
                 $currentOrder->save();
                 $this->getResponse()->setBody("Paid... ");
-            } 
-            else 
-            {
+            } else {
                 $this->getResponse()->setBody("Already completed, skipped... ");
             }
             return true;
@@ -175,7 +173,7 @@ class DPaypalBaseAction extends \Magento\Framework\App\Action\Action
             ->setTemplateIdentifier(
                 $this->scopeConfig->getValue('payment/dpaypal/email_template/failure', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
                 $storeScope
-                )
+            )
                 ->setTemplateOptions([
                     'area' => \Magento\Framework\App\Area::AREA_FRONTEND,
                     'store' => $currentOrder->getStoreId(),

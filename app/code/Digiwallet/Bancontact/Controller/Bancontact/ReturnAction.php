@@ -71,7 +71,7 @@ class ReturnAction extends BancontactBaseAction
                 AND method=" . $db->quote($this->bancontact->getMethodType());
         $result = $db->fetchAll($sql);
         $result = isset($result[0]['paid']) && $result[0]['paid'];
-        if(!$result) {
+        if (!$result) {
             // Check from Digiwallet API
             $result = parent::checkDigiwalletResult();
         }

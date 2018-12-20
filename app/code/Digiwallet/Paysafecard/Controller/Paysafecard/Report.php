@@ -1,7 +1,6 @@
 <?php
 namespace Digiwallet\Paysafecard\Controller\Paysafecard;
 
-
 use Digiwallet\Paysafecard\Controller\PaysafeBaseAction;
 
 /**

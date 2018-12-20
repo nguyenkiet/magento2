@@ -1,7 +1,6 @@
 <?php
 namespace Digiwallet\Bancontact\Controller\Bancontact;
 
-
 use Digiwallet\Bancontact\Controller\BancontactBaseAction;
 
 /**

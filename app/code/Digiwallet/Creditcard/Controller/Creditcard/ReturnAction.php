@@ -42,10 +42,10 @@ class ReturnAction extends CreditcardBaseAction
         \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository,
         \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder,
         \Magento\Checkout\Model\Session $checkoutSession
-        ) {
+    ) {
             parent::__construct($context, $resourceConnection, $localeResolver, $scopeConfig, $transaction, $transportBuilder, $order, $creditcard, $transactionRepository, $transactionBuilder);
             $this->checkoutSession = $checkoutSession;
-        }
+    }
 
     /**
      * When a customer return to website from Digiwallet Creditcard gateway.
@@ -70,7 +70,7 @@ class ReturnAction extends CreditcardBaseAction
                 AND method=" . $db->quote($this->creditcard->getMethodType());
         $result = $db->fetchAll($sql);
         $result = isset($result[0]['paid']) && $result[0]['paid'];
-        if(!$result) {
+        if (!$result) {
             // Check from Digiwallet API
             $result = parent::checkDigiwalletResult();
         }

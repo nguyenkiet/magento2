@@ -160,13 +160,13 @@ class CreditcardBaseAction extends \Magento\Framework\App\Action\Action
                 AND `digi_txid` = '" . $txId . "'";
             $db->query($sql);
 
-            if ($currentOrder->getState() != \Magento\Sales\Model\Order::STATE_PROCESSING)
-            {
-                $payment_message = __('OrderId: %1 - Digiwallet transactionId: %2 - Total price: %3', 
-                    $orderId, 
-                    $txId, 
+            if ($currentOrder->getState() != \Magento\Sales\Model\Order::STATE_PROCESSING) {
+                $payment_message = __(
+                    'OrderId: %1 - Digiwallet transactionId: %2 - Total price: %3',
+                    $orderId,
+                    $txId,
                     $currentOrder->getBaseCurrency()->formatTxt($currentOrder->getGrandTotal())
-                    );
+                );
                 // Add transaction for refunable
                 $payment = $currentOrder->getPayment();
                 $payment->setLastTransId($txId);
@@ -192,15 +192,11 @@ class CreditcardBaseAction extends \Magento\Framework\App\Action\Action
                 $invoice->setSendEmail(true);
                 $currentOrder->save();
                 $this->getResponse()->setBody("Paid... ");
-            } 
-            else 
-            {
+            } else {
                 $this->getResponse()->setBody("Already completed, skipped... ");
             }
             return true;
-        } 
-        else 
-        {
+        } else {
             /* Send failure payment email to customer */
             $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
             $transport = $this->transportBuilder

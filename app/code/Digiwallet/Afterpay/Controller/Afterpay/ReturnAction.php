@@ -15,31 +15,31 @@ class ReturnAction extends AfterpayBaseAction
 
     /**
      *
-     * @param \Magento\Framework\App\Action\Context $context            
-     * @param \Magento\Framework\App\ResourceConnection $resourceConnection            
-     * @param \Magento\Backend\Model\Locale\Resolver $localeResolver            
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig            
-     * @param \Magento\Framework\DB\Transaction $transaction            
-     * @param \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder            
-     * @param \Magento\Sales\Model\Order $order            
+     * @param \Magento\Framework\App\Action\Context $context
+     * @param \Magento\Framework\App\ResourceConnection $resourceConnection
+     * @param \Magento\Backend\Model\Locale\Resolver $localeResolver
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Framework\DB\Transaction $transaction
+     * @param \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder
+     * @param \Magento\Sales\Model\Order $order
      * @param \Digiwallet\Afterpay\Model\Afterpay $afterpay
      * @param \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository
      * @param \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
-        \Magento\Framework\App\Action\Context $context, 
-        \Magento\Framework\App\ResourceConnection $resourceConnection, 
-        \Magento\Backend\Model\Locale\Resolver $localeResolver, 
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, 
-        \Magento\Framework\DB\Transaction $transaction, 
-        \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder, 
-        \Magento\Sales\Model\Order $order, 
-        \Digiwallet\Afterpay\Model\Afterpay $afterpay, 
+        \Magento\Framework\App\Action\Context $context,
+        \Magento\Framework\App\ResourceConnection $resourceConnection,
+        \Magento\Backend\Model\Locale\Resolver $localeResolver,
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+        \Magento\Framework\DB\Transaction $transaction,
+        \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder,
+        \Magento\Sales\Model\Order $order,
+        \Digiwallet\Afterpay\Model\Afterpay $afterpay,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository,
-        \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder)
-    {
+        \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder
+    ) {
         parent::__construct($context, $resourceConnection, $localeResolver, $scopeConfig, $transaction, $transportBuilder, $order, $afterpay, $checkoutSession, $transactionRepository, $transactionBuilder);
     }
 
@@ -85,7 +85,7 @@ class ReturnAction extends AfterpayBaseAction
                 if (! empty($this->enrichment_url)) {
                     // Redirect to filling more information
                     $this->_redirect($this->enrichment_url);
-                } else if (! empty($this->reject_messages)) {
+                } elseif (! empty($this->reject_messages)) {
                     // Show error message (Reject message)
                     $errors = new AfterpayValidationException(json_decode($this->reject_messages, true));
                     foreach ($errors->getErrorItems() as $message) {

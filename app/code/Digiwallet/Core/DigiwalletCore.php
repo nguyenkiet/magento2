@@ -3,22 +3,22 @@ namespace Digiwallet\Core;
 
 /**
  * @file Provides support for Digiwallet iDEAL, Mister Cash and Sofort Banking
- * 
+ *
  * @author e-plugins.nl.
  *         @url http://www.digiwallet.nl
  *         @release 29-09-2014
  *         @ver 2.5.4
- *        
+ *
  *         Changes:
- *        
- *         v2.1 	Cancel url added
- *         v2.2 	Verify Peer disabled, too many problems with this
- *         v2.3 	Added paybyinvoice (achteraf betalen) and paysafecard (former Wallie)
- *         v2.4 	Removed IP_range and deprecated checkReportValidity . Because it is bad practice.
- *         v2.5 	Added creditcards by ATOS
- *         v2.5.3 	fix multistore and bankwire outlet identifier    
- *		   v2.5.4	fix Cannot load order
- */		   
+ *
+ *         v2.1     Cancel url added
+ *         v2.2     Verify Peer disabled, too many problems with this
+ *         v2.3     Added paybyinvoice (achteraf betalen) and paysafecard (former Wallie)
+ *         v2.4     Removed IP_range and deprecated checkReportValidity . Because it is bad practice.
+ *         v2.5     Added creditcards by ATOS
+ *         v2.5.3   fix multistore and bankwire outlet identifier
+ *         v2.5.4   fix Cannot load order
+ */
  
 
 /**
@@ -273,8 +273,9 @@ class DigiwalletCore
                 xml_parse_into_struct($p, $xml, $banks_object, $index);
                 xml_parser_free($p);
                 foreach ($banks_object as $bank) {
-                    if (empty($bank['attributes']['ID']))
+                    if (empty($bank['attributes']['ID'])) {
                         continue;
+                    }
                         $banks_array[$bank['attributes']['ID']] = $bank['value'];
                 }
             } else {
@@ -437,7 +438,7 @@ class DigiwalletCore
 
         $result = $this->httpRequest($url);
 
-        if ($this->payMethod == 'AFP'){
+        if ($this->payMethod == 'AFP') {
             // Stop checking status and transfer result to Afterpay Model to process
             return $result;
         }
@@ -450,12 +451,12 @@ class DigiwalletCore
 
         if (count($_result) == 4) {
             list ($resultCode, $consumerBank, $consumerName, $consumerCity) = $_result;
-        } elseif(count($_result) == 3){
+        } elseif (count($_result) == 3) {
             // For BankWire
             list ($resultCode, $due_amount, $paid_amount) = $_result;
             $this->consumerInfo["bw_due_amount"] = $due_amount;
             $this->consumerInfo["bw_paid_amount"] = $paid_amount;
-        }else{
+        } else {
             list ($resultCode) = $_result;
         }
 
@@ -509,32 +510,29 @@ class DigiwalletCore
             $this->errorMessage = __("API Token is empty.");
             return false;
         }
-        try
-        {
+        try {
             $api_url = "https://api.digiwallet.nl/refund";
             // Start request refund
             $this->refundResponse = $this->httpRequest($api_url, "POST", $refundData, ['Authorization: Bearer ' . $token]);
             $result = json_decode($this->refundResponse, true);
-            if(!empty($result['refundID'])){
+            if (!empty($result['refundID'])) {
                 // Sucess
                 $this->refundId = $result['refundID'];
                 return true;
             } else {
                 $this->errorMessage = $result['message'];
-                if(!empty($result['errors'])){
+                if (!empty($result['errors'])) {
                     $this->errorMessage .=  ": ";
-                    foreach ($result['errors'] as $key => $value){
+                    foreach ($result['errors'] as $key => $value) {
                         $this->errorMessage .= " " . $key . ": ";
-                        foreach ($value as $k => $val){
+                        foreach ($value as $k => $val) {
                             $this->errorMessage .= $val;
                         }
                     }
                 }
                 return false;
             }
-        }
-        catch (\Exception $ex)
-        {
+        } catch (\Exception $ex) {
             $this->errorMessage = __("Request can't be solved.");
             return false;
         }
@@ -553,32 +551,27 @@ class DigiwalletCore
             $this->errorMessage = __("API Token is empty.");
             return false;
         }
-        try
-        {
+        try {
             $api_url = "https://api.digiwallet.nl/refund/" . $this->payMethod . "/" . $transactionId;
             //$api_url = "https://api.digiwallet.nl/refund/MRC/16780347";
             $this->refundResponse = $this->httpRequest($api_url, "DELETE", array(), ['Authorization: Bearer ' . $token]);
             $result = json_decode($this->refundResponse, true);
-            if($result != null){
-                if(!empty($result['errors'])){
-                    foreach ($result['errors'] as $key => $value){
+            if ($result != null) {
+                if (!empty($result['errors'])) {
+                    foreach ($result['errors'] as $key => $value) {
                         $this->errorMessage .= " " . $key . ": ";
-                        foreach ($value as $k => $val){
+                        foreach ($value as $k => $val) {
                             $this->errorMessage .= $val;
                         }
                     }
                     return false;
                 }
                 return true;
-            }
-            else
-            {
+            } else {
                 $this->errorMessage = __("Your request can't be solved.");
                 return false;
             }
-        }
-        catch (\Exception $ex)
-        {
+        } catch (\Exception $ex) {
             $this->errorMessage = __("Your request can't be solved.");
             return false;
         }
@@ -618,7 +611,7 @@ class DigiwalletCore
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $postParams);
         }
-        if(!empty($headerParams)) {
+        if (!empty($headerParams)) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headerParams);
         }
         $result = curl_exec($ch);
@@ -806,9 +799,9 @@ class DigiwalletCore
     {
         $returnVal = '';
         if (! empty($this->errorMessage)) {
-            if ($this->language == "nl" && strpos( $this->errorMessage, " | ") !== false) {
+            if ($this->language == "nl" && strpos($this->errorMessage, " | ") !== false) {
                 list ($returnVal) = explode(" | ", $this->errorMessage, 2);
-            } elseif ($this->language == "en" && strpos( $this->errorMessage, " | ") !== false) {
+            } elseif ($this->language == "en" && strpos($this->errorMessage, " | ") !== false) {
                 list ($discard, $returnVal) = explode(" | ", $this->errorMessage, 2);
             } else {
                 $returnVal = $this->errorMessage;

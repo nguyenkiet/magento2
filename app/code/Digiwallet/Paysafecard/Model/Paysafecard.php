@@ -202,13 +202,13 @@ class Paysafecard extends \Magento\Payment\Model\Method\AbstractMethod
         if ($order->getGrandTotal() < $this->minAmount) {
             throw new \Magento\Checkout\Exception(
                 __('Het totaalbedrag is lager dan het minimum van ' . $this->minAmount . ' euro voor ' . Paysafecard::METHOD_CODE)
-                );
+            );
         }
         
-        if ($order->getGrandTotal() > $this->maxAmount ) {
+        if ($order->getGrandTotal() > $this->maxAmount) {
             throw new \Magento\Checkout\Exception(
                 __('Het totaalbedrag is hoger dan het maximum van ' . $this->maxAmount . ' euro voor ' . Paysafecard::METHOD_CODE)
-                );
+            );
         }
 
         $orderId = $order->getRealOrderId();
@@ -283,7 +283,7 @@ class Paysafecard extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function canRefund()
     {
-        return !empty ($this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/apitoken', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+        return !empty($this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/apitoken', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
     }
     /**
      * Check partial refund availability for invoice

@@ -13,31 +13,31 @@ class Report extends AfterpayBaseAction
 
     /**
      *
-     * @param \Magento\Framework\App\Action\Context $context            
-     * @param \Magento\Framework\App\ResourceConnection $resourceConnection            
-     * @param \Magento\Backend\Model\Locale\Resolver $localeResolver            
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig            
-     * @param \Magento\Framework\DB\Transaction $transaction            
-     * @param \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder            
-     * @param \Magento\Sales\Model\Order $order            
+     * @param \Magento\Framework\App\Action\Context $context
+     * @param \Magento\Framework\App\ResourceConnection $resourceConnection
+     * @param \Magento\Backend\Model\Locale\Resolver $localeResolver
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Framework\DB\Transaction $transaction
+     * @param \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder
+     * @param \Magento\Sales\Model\Order $order
      * @param \Digiwallet\Afterpay\Model\Afterpay $afterpay
      * @param \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository
      * @param \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
-        \Magento\Framework\App\Action\Context $context, 
-        \Magento\Framework\App\ResourceConnection $resourceConnection, 
-        \Magento\Backend\Model\Locale\Resolver $localeResolver, 
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, 
-        \Magento\Framework\DB\Transaction $transaction, 
-        \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder, 
-        \Magento\Sales\Model\Order $order, 
-        \Digiwallet\Afterpay\Model\Afterpay $afterpay, 
+        \Magento\Framework\App\Action\Context $context,
+        \Magento\Framework\App\ResourceConnection $resourceConnection,
+        \Magento\Backend\Model\Locale\Resolver $localeResolver,
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+        \Magento\Framework\DB\Transaction $transaction,
+        \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder,
+        \Magento\Sales\Model\Order $order,
+        \Digiwallet\Afterpay\Model\Afterpay $afterpay,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository,
-        \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder)
-    {
+        \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder
+    ) {
         parent::__construct($context, $resourceConnection, $localeResolver, $scopeConfig, $transaction, $transportBuilder, $order, $afterpay, $checkoutSession, $transactionRepository, $transactionBuilder);
     }
 
@@ -86,14 +86,14 @@ class Report extends AfterpayBaseAction
                 ->setTemplateOptions([
                 'area' => \Magento\Framework\App\Area::AREA_FRONTEND,
                 'store' => $currentOrder->getStoreId()
-            ])
+                ])
                 ->setTemplateVars([
                 'order' => $currentOrder
-            ])
+                ])
                 ->setFrom([
                 'name' => $this->scopeConfig->getValue('trans_email/ident_support/name', $storeScope),
                 'email' => $this->scopeConfig->getValue('trans_email/ident_support/email', $storeScope)
-            ])
+                ])
                 ->addTo($currentOrder->getCustomerEmail())
                 ->getTransport();
             

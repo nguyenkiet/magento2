@@ -47,7 +47,7 @@ class Report extends DPaypalBaseAction
      */
     public function execute()
     {
-        $orderId = (int) $this->getRequest ()->getParam('order_id');
+        $orderId = (int) $this->getRequest()->getParam('order_id');
         $txId = $this->getRequest()->getParam('acquirerID', null); // Note: Divergent parameter naming for PayPal, e.g. PAY-8EK778223B308454ULHSLEPI
         if (!isset($txId)) {
             $this->getResponse()->setBody("invalid callback, trxid missing");
@@ -73,8 +73,7 @@ class Report extends DPaypalBaseAction
             $this->getResponse()->setBody('callback already processed');
             return;
         }
-        if(!parent::checkDigiwalletResult($txId, $orderId))
-        {
+        if (!parent::checkDigiwalletResult($txId, $orderId)) {
             /* Send failure payment email to customer */
             $currentOrder = $this->order->loadByIncrementId($orderId);
             $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;

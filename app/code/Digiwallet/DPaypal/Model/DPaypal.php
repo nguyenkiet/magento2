@@ -205,10 +205,10 @@ class DPaypal extends \Magento\Payment\Model\Method\AbstractMethod
             );
         }
 
-        if ($order->getGrandTotal() > $this->maxAmount ) {
+        if ($order->getGrandTotal() > $this->maxAmount) {
             throw new \Magento\Checkout\Exception(
                 __('Het totaalbedrag is hoger dan het maximum van ' . $this->maxAmount . ' euro voor ' . DPaypal::METHOD_CODE)
-                );
+            );
         }
         
         $orderId = $order->getRealOrderId();
@@ -235,7 +235,7 @@ class DPaypal extends \Magento\Payment\Model\Method\AbstractMethod
 
         $url = @$digiCore->startPayment();
 
-        if (!$url) {            
+        if (!$url) {
             throw new \Exception(__("Digiwallet error: {$digiCore->getErrorMessage()}"));
         }
 
@@ -247,8 +247,7 @@ class DPaypal extends \Magento\Payment\Model\Method\AbstractMethod
                 `order_id`=" . $db->quote($orderId).",
                 `method`=" . $db->quote($this->tpMethod) . ",
                 `digi_txid`=" . $db->quote($digiCore->getTransactionId()) .",
-                `digi_response` = " . $db->quote($url)
-        );
+                `digi_response` = " . $db->quote($url));
         return $url;
     }
 
@@ -288,7 +287,7 @@ class DPaypal extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function canRefund()
     {
-        return !empty ($this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/apitoken', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+        return !empty($this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/apitoken', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
     }
     /**
      * Check partial refund availability for invoice

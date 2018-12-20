@@ -36,8 +36,7 @@ class ReturnAction extends BankwireBaseAction
         \Digiwallet\Bankwire\Model\Bankwire $bankwire,
         \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository,
         \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder
-        ) 
-    {
+    ) {
             parent::__construct($context, $resourceConnection, $localeResolver, $scopeConfig, $transaction, $transportBuilder, $order, $bankwire, $checkoutSession, $transactionRepository, $transactionBuilder);
     }
 
@@ -64,10 +63,10 @@ class ReturnAction extends BankwireBaseAction
                 AND method=" . $db->quote($this->bankwire->getMethodType());
         $result = $db->fetchAll($sql);
         
-        if (isset($result[0]['paid']) && $result[0]['paid']) {            
+        if (isset($result[0]['paid']) && $result[0]['paid']) {
             $this->_redirect('checkout/onepage/success', ['_secure' => true]);
         } else {
-            if(parent::checkDigiwalletResult($txId, $orderId)){
+            if (parent::checkDigiwalletResult($txId, $orderId)) {
                 $this->_redirect('checkout/onepage/success', ['_secure' => true, 'paid' => "1"]);
             } else {
                 $this->_redirect('checkout/cart', ['_secure' => true]);

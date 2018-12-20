@@ -68,9 +68,9 @@ class ReturnAction extends SofortBaseAction
                 WHERE `order_id` = " . $db->quote($order_id) . "
                 AND `digi_txid` = " . $db->quote($txId) . "
                 AND method=" . $db->quote($this->sofort->getMethodType());
-        $result = $db->fetchAll($sql);        
+        $result = $db->fetchAll($sql);
         $result = isset($result[0]['paid']) && $result[0]['paid'];
-        if(!$result) {
+        if (!$result) {
             // Check from Digiwallet API
             $result = parent::checkDigiwalletResult();
         }

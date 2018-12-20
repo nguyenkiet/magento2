@@ -84,8 +84,7 @@ class BankwireBaseAction extends \Magento\Framework\App\Action\Action
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository,
         \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder
-        ) 
-    {
+    ) {
             parent::__construct($context);
             $this->resoureConnection = $resourceConnection;
             $this->checkoutSession = $checkoutSession;
@@ -111,7 +110,7 @@ class BankwireBaseAction extends \Magento\Framework\App\Action\Action
             $this->scopeConfig->getValue('payment/bankwire/rtlo', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
             $language,
             $testMode
-            );
+        );
         $checksum = md5($txId . $this->scopeConfig->getValue('payment/bankwire/rtlo', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) . $this->bankwire->getSalt());
         @$digiCore->checkPayment($txId, ['checksum' => $checksum, 'once' => 0]);
 
@@ -158,15 +157,16 @@ class BankwireBaseAction extends \Magento\Framework\App\Action\Action
                 if ($paymentIsPartial) {
                     $currentOrder->setState(\Magento\Sales\Model\Order::STATE_PAYMENT_REVIEW);
                     $currentOrder->setStatus(\Magento\Sales\Model\Order::STATE_PAYMENT_REVIEW);
-                    $payment_message = __('OrderId: %1 - Digiwallet transactionId: %2 - Partial payment made: %3',
+                    $payment_message = __(
+                        'OrderId: %1 - Digiwallet transactionId: %2 - Partial payment made: %3',
                         $orderId,
                         $txId,
                         number_format($consumber_info['bw_paid_amount'] / 100, 2)
                     );
                     $currentOrder->addStatusToHistory(\Magento\Sales\Model\Order::STATE_PAYMENT_REVIEW, $payment_message, true);
-                }
-                else {
-                    $payment_message = __('OrderId: %1 - Digiwallet transactionId: %2 - Full payment made: %3',
+                } else {
+                    $payment_message = __(
+                        'OrderId: %1 - Digiwallet transactionId: %2 - Full payment made: %3',
                         $orderId,
                         $txId,
                         $currentOrder->getBaseCurrency()->formatTxt($currentOrder->getGrandTotal())
@@ -193,9 +193,7 @@ class BankwireBaseAction extends \Magento\Framework\App\Action\Action
                 $payment->save();
 
                 $this->getResponse()->setBody($paymentIsPartial ? 'Partially paid...' : 'Fully paid...');
-            } 
-            else 
-            {
+            } else {
                 $this->getResponse()->setBody("Already completed, skipped... ");
             }
             return true;
@@ -207,7 +205,7 @@ class BankwireBaseAction extends \Magento\Framework\App\Action\Action
             ->setTemplateIdentifier(
                 $this->scopeConfig->getValue('payment/bankwire/email_template/failure', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
                 $storeScope
-                )
+            )
                 ->setTemplateOptions([
                     'area' => \Magento\Framework\App\Area::AREA_FRONTEND,
                     'store' => $currentOrder->getStoreId(),

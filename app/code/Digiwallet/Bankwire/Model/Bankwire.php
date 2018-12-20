@@ -207,10 +207,10 @@ class Bankwire extends \Magento\Payment\Model\Method\AbstractMethod
             );
         }
 
-        if ($order->getGrandTotal() > $this->maxAmount ) {
+        if ($order->getGrandTotal() > $this->maxAmount) {
             throw new \Magento\Checkout\Exception(
                 __('Het totaalbedrag is hoger dan het maximum van ' . $this->maxAmount . ' euro voor ' . Bankwire::METHOD_CODE)
-                );
+            );
         }
         
         $orderId = $order->getRealOrderId();
@@ -238,10 +238,10 @@ class Bankwire extends \Magento\Payment\Model\Method\AbstractMethod
 
         $result = @$digiCore->startPayment();
 
-        if (!$result) {            
+        if (!$result) {
             throw new \Exception(__("Digiwallet error: {$digiCore->getErrorMessage()}"));
         }
-        // Format Ex: XXXX-XX-YY-ZZZZ|5940.74.231|NL44ABNA0594074231|ABNANL2A|St. Derdengelden TargetMedia|ABN Amro        
+        // Format Ex: XXXX-XX-YY-ZZZZ|5940.74.231|NL44ABNA0594074231|ABNANL2A|St. Derdengelden TargetMedia|ABN Amro
         $db = $this->resoureConnection->getConnection();
         $tableName   = $this->resoureConnection->getTableName('digiwallet_transaction');
         $db->delete($tableName, ['order_id = ?' => $db->quote($orderId)]);
@@ -251,8 +251,7 @@ class Bankwire extends \Magento\Payment\Model\Method\AbstractMethod
             `method`=" . $db->quote($this->tpMethod) . ",
             `digi_txid`=" . $db->quote($digiCore->getTransactionId()) .",
             `digi_response` = " . $db->quote($digiCore->getMoreInformation()) . ",
-            `more` = " . $db->quote($digiCore->getMoreInformation())
-            );
+            `more` = " . $db->quote($digiCore->getMoreInformation()));
         return $digiCore;
     }
 
@@ -272,7 +271,7 @@ class Bankwire extends \Magento\Payment\Model\Method\AbstractMethod
 
     /**
      * Bankwire Salt code
-     * 
+     *
      * @return string
      */
     public function getSalt()
@@ -300,7 +299,7 @@ class Bankwire extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function canRefund()
     {
-        return !empty ($this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/apitoken', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+        return !empty($this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/apitoken', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
     }
     /**
      * Check partial refund availability for invoice
@@ -332,4 +331,3 @@ class Bankwire extends \Magento\Payment\Model\Method\AbstractMethod
         $refundObj->refund();
     }
 }
-

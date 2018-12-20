@@ -6,22 +6,22 @@ class AfterpayValidationException extends \Exception
 
     /**
      * Array of message
-     * 
+     *
      * @var unknown
      */
     private $messages;
 
     /**
      * The original message string
-     * 
+     *
      * @var unknown
      */
     private $message_content;
 
     /**
      * The validation error exception
-     * 
-     * @param unknown $error_message            
+     *
+     * @param unknown $error_message
      */
     public function __construct($error_message)
     {
@@ -30,7 +30,7 @@ class AfterpayValidationException extends \Exception
 
     /**
      * Get array of validation message
-     * 
+     *
      * @return string[]
      */
     public function getErrorItems()
@@ -44,7 +44,7 @@ class AfterpayValidationException extends \Exception
     /**
      * *
      * Check if the message are Afterpay validation messages
-     * 
+     *
      * @return boolean
      */
     public function IsValidationError()

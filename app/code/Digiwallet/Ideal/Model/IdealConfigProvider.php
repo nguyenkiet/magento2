@@ -30,16 +30,16 @@ class IdealConfigProvider implements \Magento\Checkout\Model\ConfigProviderInter
 
     /**
      *
-     * @param \Magento\Framework\Escaper $escaper            
-     * @param \Magento\Payment\Helper\Data $paymentHelper            
+     * @param \Magento\Framework\Escaper $escaper
+     * @param \Magento\Payment\Helper\Data $paymentHelper
      * @param \Magento\Framework\UrlInterface $urlBuilder
      *            @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
-        \Magento\Framework\Escaper $escaper, 
-        \Magento\Payment\Helper\Data $paymentHelper, 
-        \Magento\Framework\UrlInterface $urlBuilder)
-    {
+        \Magento\Framework\Escaper $escaper,
+        \Magento\Payment\Helper\Data $paymentHelper,
+        \Magento\Framework\UrlInterface $urlBuilder
+    ) {
         $this->escaper = $escaper;
         $this->method = $paymentHelper->getMethodInstance($this->methodCode);
         $this->urlBuilder = $urlBuilder;

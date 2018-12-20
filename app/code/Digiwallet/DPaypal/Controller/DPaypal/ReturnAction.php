@@ -60,10 +60,10 @@ class ReturnAction extends DPaypalBaseAction
                 AND method=" . $db->quote($this->dpaypal->getMethodType());
         $result = $db->fetchAll($sql);
         
-        if (isset($result[0]['paid']) && $result[0]['paid']) {            
+        if (isset($result[0]['paid']) && $result[0]['paid']) {
             $this->_redirect('checkout/onepage/success', ['_secure' => true]);
         } else {
-            if(parent::checkDigiwalletResult($txId, $orderId)){
+            if (parent::checkDigiwalletResult($txId, $orderId)) {
                 $this->_redirect('checkout/onepage/success', ['_secure' => true, 'paid' => "1"]);
             } else {
                 $this->checkoutSession->restoreQuote();

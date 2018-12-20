@@ -218,16 +218,15 @@ class Afterpay extends \Magento\Payment\Model\Method\AbstractMethod
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         \Magento\Framework\App\RequestInterface $requestInterface = null,
         array $data = []
-        )
-    {
+    ) {
         parent::__construct($context, $registry, $extensionFactory, $customAttributeFactory, $paymentData, $scopeConfig, $logger, $resource, $resourceCollection, $data);
 
         $this->urlBuilder = $urlBuilder;
         $this->checkoutSession = $checkoutSession;
         $this->order = $order;
         $this->localeResolver = $localeResolver;
-        $this->resoureConnection = $resourceConnection; 
-        $this->request = $requestInterface;       
+        $this->resoureConnection = $resourceConnection;
+        $this->request = $requestInterface;
     }
     /***
      * Get product tax by Digiwallet
@@ -236,24 +235,29 @@ class Afterpay extends \Magento\Payment\Model\Method\AbstractMethod
      */
     private function getTax($val)
     {
-        if(empty($val)) return 4; // No tax
-        else if($val >= 21) return 1;
-        else if($val >= 6) return 2;
-        else return 3;
+        if (empty($val)) {
+            return 4; // No tax
+        } elseif ($val >= 21) {
+            return 1;
+        } elseif ($val >= 6) {
+            return 2;
+        } else {
+            return 3;
+        }
     }
     /**
      * Format phonenumber by NL/BE
-     * 
+     *
      * @param unknown $country
      * @param unknown $phone
      * @return unknown
      */
-    private static function format_phone($country, $phone) {
+    private static function format_phone($country, $phone)
+    {
         $function = 'format_phone_' . strtolower($country);
-        if(method_exists('Digiwallet\Afterpay\Model\Afterpay', $function)) {
+        if (method_exists('Digiwallet\Afterpay\Model\Afterpay', $function)) {
             return self::$function($phone);
-        }
-        else {
+        } else {
             echo "unknown phone formatter for country: ". $function;
             exit;
         }
@@ -262,17 +266,20 @@ class Afterpay extends \Magento\Payment\Model\Method\AbstractMethod
     
     /**
      * Format phone number
-     * 
+     *
      * @param unknown $phone
      * @return string|mixed
      */
-    private static function format_phone_nld($phone) {
+    private static function format_phone_nld($phone)
+    {
         // note: making sure we have something
-        if(!isset($phone{3})) { return ''; }
+        if (!isset($phone{3})) {
+            return '';
+        }
         // note: strip out everything but numbers
         $phone = preg_replace("/[^0-9]/", "", $phone);
         $length = strlen($phone);
-        switch($length) {
+        switch ($length) {
             case 9:
                 return "+31".$phone;
                 break;
@@ -291,17 +298,20 @@ class Afterpay extends \Magento\Payment\Model\Method\AbstractMethod
     
     /**
      * Format phone number
-     * 
+     *
      * @param unknown $phone
      * @return string|mixed
      */
-    private static function format_phone_bel($phone) {
+    private static function format_phone_bel($phone)
+    {
         // note: making sure we have something
-        if(!isset($phone{3})) { return ''; }
+        if (!isset($phone{3})) {
+            return '';
+        }
         // note: strip out everything but numbers
         $phone = preg_replace("/[^0-9]/", "", $phone);
         $length = strlen($phone);
-        switch($length) {
+        switch ($length) {
             case 9:
                 return "+32".$phone;
                 break;
@@ -331,7 +341,7 @@ class Afterpay extends \Magento\Payment\Model\Method\AbstractMethod
         ];
         $addressResult = null;
         preg_match("/(?P<address>\D+) (?P<number>\d+) (?P<numberAdd>.*)/", $street, $addressResult);
-        if(!$addressResult) {
+        if (!$addressResult) {
             preg_match("/(?P<address>\D+) (?P<number>\d+)/", $street, $addressResult);
         }
         if (empty($addressResult)) {
@@ -404,7 +414,7 @@ class Afterpay extends \Magento\Payment\Model\Method\AbstractMethod
             $total_amount_by_product += $item->getPrice();
         }
         // Update to fix the total amount and item price
-        if($total_amount_by_product < $order->getGrandTotal()){
+        if ($total_amount_by_product < $order->getGrandTotal()) {
             $invoice_lines[] = [
                 'productCode' => "000000",
                 'productDescription' => "Other fee (shipping, additional fees)",
@@ -414,7 +424,7 @@ class Afterpay extends \Magento\Payment\Model\Method\AbstractMethod
             ];
         }
         // Add invoice line to payment
-        if($invoice_lines != null && !empty($invoice_lines)){
+        if ($invoice_lines != null && !empty($invoice_lines)) {
             $digiCore->bindParam('invoicelines', json_encode($invoice_lines));
         }
         $billingAddress = $order->getBillingAddress();
@@ -426,7 +436,7 @@ class Afterpay extends \Magento\Payment\Model\Method\AbstractMethod
         $billing_addresses = ($billingAddress == null ? array() : $billingAddress->getStreet());
         $billing_address_1 = count($billing_addresses) > 0 ? $billing_addresses[0] : "";
         $billing_address_2 = count($billing_addresses) > 1 ? $billing_addresses[1] : "";
-        if(empty($billing_address_1)) {
+        if (empty($billing_address_1)) {
             $billing_address_1 = $billing_address_2;
         }
         $streetParts = self::breakDownStreet($billing_address_1);
@@ -451,7 +461,7 @@ class Afterpay extends \Magento\Payment\Model\Method\AbstractMethod
         $shipping_addresses = $shippingAddress == null ? array() : $shippingAddress->getStreet();
         $shipping_address_1 = count($shipping_addresses) > 0 ? $shipping_addresses[0] : "";
         $shipping_address_2 = count($shipping_addresses) > 1 ? $shipping_addresses[1] : "";
-        if(empty($shipping_address_1)){
+        if (empty($shipping_address_1)) {
             $shipping_address_1 = $shipping_address_2;
         }
         $streetParts = self::breakDownStreet($shipping_address_1);
@@ -593,7 +603,7 @@ class Afterpay extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function canRefund()
     {
-        return !empty ($this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/apitoken', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+        return !empty($this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/apitoken', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
     }
     /**
      * Check partial refund availability for invoice

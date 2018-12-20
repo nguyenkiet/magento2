@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Digiwallet\Core;
 
 use Digiwallet\Core\DigiwalletCore;
@@ -32,12 +32,12 @@ class DigiwalletRefund
     private $methodId;
     /**
      * Payment Infterface object
-     * 
+     *
      * @var \Magento\Payment\Model\InfoInterface
      */
     private $payment;
     /**
-     * 
+     *
      * @var integer
      */
     private $amount;
@@ -80,13 +80,12 @@ class DigiwalletRefund
      * @param \Magento\Framework\App\ResourceConnection $resoureConnection
      */
     public function __construct(
-        $paymentMethodId, 
+        $paymentMethodId,
         $amount,
         $api_token,
-        \Magento\Payment\Model\InfoInterface $payment, 
+        \Magento\Payment\Model\InfoInterface $payment,
         \Magento\Framework\App\ResourceConnection $resoureConnection
-    )
-    {
+    ) {
         $this->methodId = $paymentMethodId;
         $this->amount = $amount;
         $this->payment = $payment;
@@ -141,7 +140,7 @@ class DigiwalletRefund
         $description = isset($_REQUEST['creditmemo']) ? $_REQUEST['creditmemo']['comment_text'] : "";
         $internalNote =  "Refunding Order with orderId: " . $order->getIncrementId() . " - Digiwallet transactionId: $transactionId - Total price: " . $order->getBaseCurrency()->formatTxt($order->getGrandTotal());
         $consumerName = $order->getCustomerName();
-        if($order->getCustomer() != null){
+        if ($order->getCustomer() != null) {
             $consumerName = $order->getCustomer()->getName();
         }
         
@@ -158,9 +157,9 @@ class DigiwalletRefund
             $this->rtloCode,
             $this->language,
             $this->isTestMode
-            );
+        );
         // Refund sucess if testmode enable
-        if(!$this->isTestMode && !$digiCore->refundInvoice($refundData, $this->apiToken)){
+        if (!$this->isTestMode && !$digiCore->refundInvoice($refundData, $this->apiToken)) {
             throw new \Exception(__("Digiwallet refunding error: {$digiCore->getErrorMessage()}"));
         }
     }

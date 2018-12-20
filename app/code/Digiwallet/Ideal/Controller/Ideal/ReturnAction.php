@@ -42,10 +42,10 @@ class ReturnAction extends IdealBaseAction
         \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository,
         \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder,
         \Magento\Checkout\Model\Session $checkoutSession
-        ) {
+    ) {
             parent::__construct($context, $resourceConnection, $localeResolver, $scopeConfig, $transaction, $transportBuilder, $order, $ideal, $transactionRepository, $transactionBuilder);
             $this->checkoutSession = $checkoutSession;
-        }
+    }
 
     /**
      * When a customer return to website from Digiwallet Ideal gateway.
@@ -71,7 +71,7 @@ class ReturnAction extends IdealBaseAction
                 AND method=" . $db->quote($this->ideal->getMethodType());
         $result = $db->fetchAll($sql);
         $result = isset($result[0]['paid']) && $result[0]['paid'];
-        if(!$result) {
+        if (!$result) {
             // Check from Digiwallet API
             $result = parent::checkDigiwalletResult();
         }

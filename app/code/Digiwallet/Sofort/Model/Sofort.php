@@ -236,13 +236,13 @@ class Sofort extends \Magento\Payment\Model\Method\AbstractMethod
         if ($order->getGrandTotal() < $this->minAmount) {
             throw new \Magento\Checkout\Exception(
                 __('Het totaalbedrag is lager dan het minimum van ' . $this->minAmount . ' euro voor ' . Sofort::METHOD_CODE)
-                );
+            );
         }
         
-        if ($order->getGrandTotal() > $this->maxAmount ) {
+        if ($order->getGrandTotal() > $this->maxAmount) {
             throw new \Magento\Checkout\Exception(
                 __('Het totaalbedrag is hoger dan het maximum van ' . $this->maxAmount . ' euro voor ' . Sofort::METHOD_CODE)
-                );
+            );
         }
 
         $orderId = $order->getRealOrderId();
@@ -257,11 +257,11 @@ class Sofort extends \Magento\Payment\Model\Method\AbstractMethod
         );
         $digiCore->setAmount(round($order->getGrandTotal() * 100));
         $digiCore->setDescription("Order #$orderId");
-        if(!$countryId || empty($countryId)) {
+        if (!$countryId || empty($countryId)) {
             // Check order country ID
-            if($order->getBillingAddress() != null) {
+            if ($order->getBillingAddress() != null) {
                 $billing_country_code = strtolower($order->getBillingAddress()->getCountryId());
-                if(isset($this->country_codes[$billing_country_code])) {
+                if (isset($this->country_codes[$billing_country_code])) {
                     $countryId = $this->country_codes[$billing_country_code];
                 }
             }
@@ -341,7 +341,7 @@ class Sofort extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function canRefund()
     {
-        return !empty ($this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/apitoken', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+        return !empty($this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/apitoken', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
     }
     /**
      * Check partial refund availability for invoice
