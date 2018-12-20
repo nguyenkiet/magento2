@@ -48,6 +48,6 @@ class Report extends PaysafeBaseAction
      */
     public function execute()
     {
-        parent::checkTargetPayResult();
+        parent::checkDigiwalletResult();
     }
 }

@@ -73,7 +73,7 @@ class Report extends BankwireBaseAction
             $this->getResponse()->setBody('callback already processed');
             return;
         }
-        if(!parent::checkTargetPayResult($txId, $orderId))
+        if(!parent::checkDigiwalletResult($txId, $orderId))
         {
             /* Send failure payment email to customer */
             $currentOrder = $this->order->loadByIncrementId($orderId);

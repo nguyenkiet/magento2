@@ -47,6 +47,6 @@ class Report extends CreditcardBaseAction
      */
     public function execute()
     {
-        parent::checkTargetPayResult();
+        parent::checkDigiwalletResult();
     }
 }

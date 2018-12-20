@@ -1,7 +1,7 @@
 <?php 
 namespace Digiwallet\Core;
 
-use Digiwallet\Core\TargetPayCore;
+use Digiwallet\Core\DigiwalletCore;
 
 /**
  * @file Provides support for Digiwallet iDEAL, Mister Cash and Sofort Banking
@@ -23,7 +23,7 @@ use Digiwallet\Core\TargetPayCore;
 /**
  * @class Digiwallet Core class
  */
-class TargetPayRefund
+class DigiwalletRefund
 {
     /**
      * Payment method ID
@@ -153,7 +153,7 @@ class TargetPayRefund
             'internalNote' => $internalNote,
             'consumerName' => $consumerName
         );
-        $digiCore = new TargetPayCore(
+        $digiCore = new DigiwalletCore(
             $this->methodId,
             $this->rtloCode,
             $this->language,

@@ -1,7 +1,7 @@
 <?php
 namespace Digiwallet\Ideal\Controller;
 
-use Digiwallet\Core\TargetPayCore;
+use Digiwallet\Core\DigiwalletCore;
 
 /**
  * Digiwallet Ideal Report Controller
@@ -109,7 +109,7 @@ class IdealBaseAction extends \Magento\Framework\App\Action\Action
      *
      * @return void|string
      */
-    public function checkTargetPayResult()
+    public function checkDigiwalletResult()
     {
         $orderId = (int)$this->getRequest()->getParam('order_id');
         $txId = (string)$this->getRequest()->getParam('trxid', null);
@@ -140,7 +140,7 @@ class IdealBaseAction extends \Magento\Framework\App\Action\Action
 
         $language = ($this->localeResolver->getLocale() == 'nl_NL') ? 'nl' : 'en';
         $testMode = false;//(bool) $this->scopeConfig->getValue('payment/ideal/testmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        $digiCore = new TargetPayCore(
+        $digiCore = new DigiwalletCore(
             $this->ideal->getMethodType(),
             $this->scopeConfig->getValue('payment/ideal/rtlo', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
             $language,

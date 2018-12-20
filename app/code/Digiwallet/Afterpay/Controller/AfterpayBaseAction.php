@@ -1,7 +1,7 @@
 <?php
 namespace Digiwallet\Afterpay\Controller;
 
-use Digiwallet\Core\TargetPayCore;
+use Digiwallet\Core\DigiwalletCore;
 
 /**
  * Digiwallet Afterpay Report Controller
@@ -129,13 +129,13 @@ class AfterpayBaseAction extends \Magento\Framework\App\Action\Action
      * 
      * @return boolean
      */
-    public function checkTargetPayResult($txId, $orderId)
+    public function checkDigiwalletResult($txId, $orderId)
     {
         $language = ($this->localeResolver->getLocale() == 'nl_NL') ? 'nl' : 'en';
         $testMode = false;//(bool) $this->scopeConfig->getValue('payment/afterpay/testmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         $paymentStatus = false;
         
-        $digiCore = new TargetPayCore(
+        $digiCore = new DigiwalletCore(
             $this->afterpay->getMethodType(), 
             $this->scopeConfig->getValue('payment/afterpay/rtlo', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
             $language, 

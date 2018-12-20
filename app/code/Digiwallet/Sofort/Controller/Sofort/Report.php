@@ -46,6 +46,6 @@ class Report extends SofortBaseAction
      */
     public function execute()
     {
-        parent::checkTargetPayResult();
+        parent::checkDigiwalletResult();
     }
 }

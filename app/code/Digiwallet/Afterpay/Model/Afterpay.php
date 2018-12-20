@@ -1,8 +1,8 @@
 <?php
 namespace Digiwallet\Afterpay\Model;
 
-use Digiwallet\Core\TargetPayCore;
-use Digiwallet\Core\TargetPayRefund;
+use Digiwallet\Core\DigiwalletCore;
+use Digiwallet\Core\DigiwalletRefund;
 use Digiwallet\Afterpay\Controller\AfterpayValidationException;
 
 class Afterpay extends \Magento\Payment\Model\Method\AbstractMethod
@@ -373,7 +373,7 @@ class Afterpay extends \Magento\Payment\Model\Method\AbstractMethod
         $language = ($this->localeResolver->getLocale() == 'nl_NL') ? "nl" : "en";
         $testMode = false;//(bool) $this->_scopeConfig->getValue('payment/afterpay/testmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
 
-        $digiCore = new TargetPayCore($this->tpMethod, $this->_scopeConfig->getValue('payment/afterpay/rtlo', \Magento\Store\Model\ScopeInterface::SCOPE_STORE), $language, $testMode);
+        $digiCore = new DigiwalletCore($this->tpMethod, $this->_scopeConfig->getValue('payment/afterpay/rtlo', \Magento\Store\Model\ScopeInterface::SCOPE_STORE), $language, $testMode);
         $digiCore->setAmount(round($order->getGrandTotal() * 100));
         $digiCore->setDescription("Order #$orderId");
         $digiCore->setReturnUrl($this->urlBuilder->getUrl('afterpay/afterpay/return', [
@@ -618,7 +618,7 @@ class Afterpay extends \Magento\Payment\Model\Method\AbstractMethod
     public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
         $api_token = $this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/apitoken', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        $refundObj = new TargetPayRefund(self::METHOD_TYPE, $amount, $api_token, $payment, $this->resoureConnection);
+        $refundObj = new DigiwalletRefund(self::METHOD_TYPE, $amount, $api_token, $payment, $this->resoureConnection);
         $refundObj->setLanguage(($this->localeResolver->getLocale() == 'nl_NL') ? "nl" : "en");
         $refundObj->setLayoutCode($this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/rtlo', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
         $refundObj->setTestMode(false);//(bool) $this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/testmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));

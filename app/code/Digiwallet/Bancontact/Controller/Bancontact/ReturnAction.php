@@ -73,7 +73,7 @@ class ReturnAction extends BancontactBaseAction
         $result = isset($result[0]['paid']) && $result[0]['paid'];
         if(!$result) {
             // Check from Digiwallet API
-            $result = parent::checkTargetPayResult();
+            $result = parent::checkDigiwalletResult();
         }
         if ($result) {
             $this->_redirect('checkout/onepage/success', ['_secure' => true]);

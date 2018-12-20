@@ -1,7 +1,7 @@
 <?php
 namespace Digiwallet\Bankwire\Controller;
 
-use Digiwallet\Core\TargetPayCore;
+use Digiwallet\Core\DigiwalletCore;
 
 /**
  * Digiwallet Bankwire Report Controller
@@ -102,11 +102,11 @@ class BankwireBaseAction extends \Magento\Framework\App\Action\Action
      * Use to check order from target pay
      * @return boolean
      */
-    public function checkTargetPayResult($txId, $orderId)
+    public function checkDigiwalletResult($txId, $orderId)
     {
         $language = ($this->localeResolver->getLocale() == 'nl_NL') ? 'nl' : 'en';
         $testMode = false;//(bool) $this->scopeConfig->getValue('payment/bankwire/testmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        $digiCore = new TargetPayCore(
+        $digiCore = new DigiwalletCore(
             $this->bankwire->getMethodType(),
             $this->scopeConfig->getValue('payment/bankwire/rtlo', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
             $language,

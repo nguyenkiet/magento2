@@ -47,6 +47,6 @@ class Report extends BancontactBaseAction
      */
     public function execute()
     {
-        parent::checkTargetPayResult();
+        parent::checkDigiwalletResult();
     }
 }

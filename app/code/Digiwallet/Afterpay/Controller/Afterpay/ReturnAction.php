@@ -76,7 +76,7 @@ class ReturnAction extends AfterpayBaseAction
                 '_secure' => true
             ]);
         } else {
-            if (parent::checkTargetPayResult($txId, $orderId)) {
+            if (parent::checkDigiwalletResult($txId, $orderId)) {
                 $this->_redirect('checkout/onepage/success', [
                     '_secure' => true,
                     'paid' => "1"

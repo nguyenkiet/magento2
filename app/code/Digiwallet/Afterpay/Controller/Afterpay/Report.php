@@ -78,7 +78,7 @@ class Report extends AfterpayBaseAction
             $this->getResponse()->setBody('callback already processed');
             return;
         }
-        if (! parent::checkTargetPayResult($txId, $orderId)) {
+        if (! parent::checkDigiwalletResult($txId, $orderId)) {
             /* Send failure payment email to customer */
             $currentOrder = $this->order->loadByIncrementId($orderId);
             $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;

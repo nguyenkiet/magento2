@@ -1,8 +1,8 @@
 <?php
 namespace Digiwallet\Ideal\Model;
 
-use Digiwallet\Core\TargetPayCore;
-use Digiwallet\Core\TargetPayRefund;
+use Digiwallet\Core\DigiwalletCore;
+use Digiwallet\Core\DigiwalletRefund;
 
 class Ideal extends \Magento\Payment\Model\Method\AbstractMethod
 {
@@ -214,7 +214,7 @@ class Ideal extends \Magento\Payment\Model\Method\AbstractMethod
         $language = ($this->localeResolver->getLocale() == 'nl_NL') ? "nl" : "en";
         $testMode = false;//(bool) $this->_scopeConfig->getValue('payment/ideal/testmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         
-        $digiCore = new TargetPayCore(
+        $digiCore = new DigiwalletCore(
             $this->tpMethod,
             $this->_scopeConfig->getValue('payment/ideal/rtlo', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
             $language,
@@ -286,7 +286,7 @@ class Ideal extends \Magento\Payment\Model\Method\AbstractMethod
     public function getBankList()
     {
         $language = ($this->localeResolver->getLocale() == 'nl_NL') ? 'nl' : 'en';
-        $digiCore = new TargetPayCore(
+        $digiCore = new DigiwalletCore(
             $this->tpMethod,
             $this->_scopeConfig->getValue('payment/ideal/rtlo', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
             $language,
@@ -328,7 +328,7 @@ class Ideal extends \Magento\Payment\Model\Method\AbstractMethod
     public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
         $api_token = $this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/apitoken', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        $refundObj = new TargetPayRefund(self::METHOD_TYPE, $amount, $api_token, $payment, $this->resoureConnection);
+        $refundObj = new DigiwalletRefund(self::METHOD_TYPE, $amount, $api_token, $payment, $this->resoureConnection);
         $refundObj->setLanguage(($this->localeResolver->getLocale() == 'nl_NL') ? "nl" : "en");
         $refundObj->setLayoutCode($this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/rtlo', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
         $refundObj->setTestMode(false);//(bool) $this->_scopeConfig->getValue('payment/' .  self::METHOD_CODE . '/testmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));

@@ -72,7 +72,7 @@ class ReturnAction extends SofortBaseAction
         $result = isset($result[0]['paid']) && $result[0]['paid'];
         if(!$result) {
             // Check from Digiwallet API
-            $result = parent::checkTargetPayResult();
+            $result = parent::checkDigiwalletResult();
         }
         // Redirect
         if ($result) {

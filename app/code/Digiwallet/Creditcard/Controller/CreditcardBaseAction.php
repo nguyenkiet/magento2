@@ -1,7 +1,7 @@
 <?php
 namespace Digiwallet\Creditcard\Controller;
 
-use Digiwallet\Core\TargetPayCore;
+use Digiwallet\Core\DigiwalletCore;
 
 /**
  * Digiwallet Creditcard Report Controller
@@ -107,7 +107,7 @@ class CreditcardBaseAction extends \Magento\Framework\App\Action\Action
      *
      * @return void|string
      */
-    public function checkTargetPayResult()
+    public function checkDigiwalletResult()
     {
         $orderId = (int)$this->getRequest()->getParam('order_id');
         $txId = (string)$this->getRequest()->getParam('trxid', null);
@@ -138,7 +138,7 @@ class CreditcardBaseAction extends \Magento\Framework\App\Action\Action
 
         $language = ($this->localeResolver->getLocale() == 'nl_NL') ? 'nl' : 'en';
         $testMode = false;//(bool) $this->scopeConfig->getValue('payment/creditcard/testmode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        $digiCore = new TargetPayCore(
+        $digiCore = new DigiwalletCore(
             $this->creditcard->getMethodType(),
             $this->scopeConfig->getValue('payment/creditcard/rtlo', \Magento\Store\Model\ScopeInterface::SCOPE_STORE),
             $language,

@@ -67,7 +67,7 @@ class ReturnAction extends BankwireBaseAction
         if (isset($result[0]['paid']) && $result[0]['paid']) {            
             $this->_redirect('checkout/onepage/success', ['_secure' => true]);
         } else {
-            if(parent::checkTargetPayResult($txId, $orderId)){
+            if(parent::checkDigiwalletResult($txId, $orderId)){
                 $this->_redirect('checkout/onepage/success', ['_secure' => true, 'paid' => "1"]);
             } else {
                 $this->_redirect('checkout/cart', ['_secure' => true]);

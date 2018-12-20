@@ -22,9 +22,9 @@ namespace Digiwallet\Core;
  
 
 /**
- * @class TargetPay Core class
+ * @class Digiwallet Core class
  */
-class TargetPayCore
+class DigiwalletCore
 {
 
     const APP_ID = 'dw_magento2.x_2.5.4'; // Adjust postfix version number with public plugin releases to Git version number
@@ -265,7 +265,7 @@ class TargetPayCore
         $xml = $this->httpRequest($url);
         $banks_array = array();
         if (! $xml) {
-            $banks_array["IDE0001"] = "Bankenlijst kon niet opgehaald worden bij TargetPay, controleer of curl werkt!";
+            $banks_array["IDE0001"] = "Bankenlijst kon niet opgehaald worden bij Digiwallet, controleer of curl werkt!";
             $banks_array["IDE0002"] = "  ";
         } else {
             if ($this->payMethod == 'IDE') {

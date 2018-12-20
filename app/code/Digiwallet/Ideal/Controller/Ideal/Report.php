@@ -46,6 +46,6 @@ class Report extends IdealBaseAction
      */
     public function execute()
     {
-        parent::checkTargetPayResult();
+        parent::checkDigiwalletResult();
     }
 }
