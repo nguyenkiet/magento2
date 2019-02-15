@@ -1,8 +1,8 @@
 <?php
 namespace Digiwallet\DPaypal\Model;
 
-use Digiwallet\Core\DigiwalletCore;
-use Digiwallet\Core\DigiwalletRefund;
+use Digiwallet\DCore\DigiwalletCore;
+use Digiwallet\DCore\DigiwalletRefund;
 
 class DPaypal extends \Magento\Payment\Model\Method\AbstractMethod
 {
@@ -227,7 +227,7 @@ class DPaypal extends \Magento\Payment\Model\Method\AbstractMethod
             $this->urlBuilder->getUrl('dpaypal/dpaypal/return', ['_secure' => true, 'order_id' => $orderId])
         );
         $digiCore->setReportUrl(
-            $this->urlBuilder->getUrl('dpaypal/dpaypal/report', ['_secure' => true, 'order_id' => $orderId])
+            $this->urlBuilder->getUrl('dpaypal/dpaypal/report', ['_secure' => true, 'order_id' => $orderId, 'ajax' => 1])
         );
         
         $digiCore->bindParam('email', $order->getCustomerEmail());

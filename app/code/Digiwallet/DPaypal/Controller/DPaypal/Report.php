@@ -97,8 +97,7 @@ class Report extends DPaypalBaseAction
             $transport->sendMessage();
             $this->getResponse()->setBody("Not paid ... ");
         }
-
-        echo "(Magento, 15-06-2016)";
+        print_r("(Magento, 15-06-2016)");
         return;
     }
 }

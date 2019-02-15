@@ -1,7 +1,7 @@
 <?php
 namespace Digiwallet\DPaypal\Controller;
 
-use Digiwallet\Core\DigiwalletCore;
+use Digiwallet\DCore\DigiwalletCore;
 
 /**
  * Digiwallet DPaypal Report Controller
