@@ -61,6 +61,11 @@ class DBankwireBaseAction extends \Magento\Framework\App\Action\Action
     protected $transactionBuilder;
 
     /**
+     * @var string
+     */
+    protected $errorMessage;
+
+    /**
      * @var \Magento\Sales\Model\Order\Email\Sender\InvoiceSender
      */
     protected $invoiceSender;
@@ -230,6 +235,7 @@ class DBankwireBaseAction extends \Magento\Framework\App\Action\Action
                 ->getTransport();
             
             //$transport->sendMessage();
+            $this->errorMessage = $digiCore->getErrorMessage();
         }
         return false;
     }

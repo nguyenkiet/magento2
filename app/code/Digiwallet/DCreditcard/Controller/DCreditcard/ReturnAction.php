@@ -12,6 +12,11 @@ use Digiwallet\DCreditcard\Controller\DCreditcardBaseAction;
 class ReturnAction extends DCreditcardBaseAction
 {
     /**
+     * @var \Magento\Framework\App\Action\Context
+     */
+    private $context;
+
+    /**
      * @var \Magento\Checkout\Model\Session
      */
     private $checkoutSession;
@@ -44,10 +49,12 @@ class ReturnAction extends DCreditcardBaseAction
         \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
-    ) {
-            parent::__construct($context, $resourceConnection, $localeResolver, $scopeConfig, $transaction,
-                $transportBuilder, $order, $dcreditcard, $transactionRepository, $transactionBuilder, $invoiceSender);
-            $this->checkoutSession = $checkoutSession;
+    )
+    {
+        parent::__construct($context, $resourceConnection, $localeResolver, $scopeConfig, $transaction,
+            $transportBuilder, $order, $dcreditcard, $transactionRepository, $transactionBuilder, $invoiceSender);
+        $this->checkoutSession = $checkoutSession;
+        $this->context = $context;
     }
 
     /**
@@ -81,6 +88,9 @@ class ReturnAction extends DCreditcardBaseAction
             $this->_redirect('checkout/onepage/success', ['_secure' => true]);
         } else {
             $this->checkoutSession->restoreQuote();
+            if(!empty($this->errorMessage)) {
+                $this->context->getMessageManager()->addErrorMessage($this->errorMessage);
+            }
             return $resultRedirect->setPath('checkout/cart');
         }
     }

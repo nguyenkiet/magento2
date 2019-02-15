@@ -12,6 +12,11 @@ use Digiwallet\DBankwire\Controller\DBankwireBaseAction;
 class ReturnAction extends DBankwireBaseAction
 {
     /**
+     * @var \Magento\Framework\App\Action\Context
+     */
+    private $context;
+
+    /**
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Magento\Framework\App\ResourceConnection $resourceConnection
      * @param \Magento\Backend\Model\Locale\Resolver $localeResolver
@@ -41,6 +46,7 @@ class ReturnAction extends DBankwireBaseAction
     ) {
             parent::__construct($context, $resourceConnection, $localeResolver, $scopeConfig, $transaction,
                 $transportBuilder, $order, $dbankwire, $checkoutSession, $transactionRepository, $transactionBuilder, $invoiceSender);
+            $this->context = $context;
     }
 
     /**
@@ -72,6 +78,10 @@ class ReturnAction extends DBankwireBaseAction
             if (parent::checkDigiwalletResult($txId, $orderId)) {
                 $this->_redirect('checkout/onepage/success', ['_secure' => true, 'paid' => "1"]);
             } else {
+                $this->checkoutSession->restoreQuote();
+                if(!empty($this->errorMessage)) {
+                    $this->context->getMessageManager()->addErrorMessage($this->errorMessage);
+                }
                 $this->_redirect('checkout/cart', ['_secure' => true]);
             }
         }

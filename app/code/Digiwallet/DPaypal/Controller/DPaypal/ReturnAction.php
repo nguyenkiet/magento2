@@ -12,6 +12,11 @@ use Digiwallet\DPaypal\Controller\DPaypalBaseAction;
 class ReturnAction extends DPaypalBaseAction
 {
     /**
+     * @var \Magento\Framework\App\Action\Context
+     */
+    private $context;
+
+    /**
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Magento\Framework\App\ResourceConnection $resourceConnection
      * @param \Psr\Log\LoggerInterface $logger
@@ -34,9 +39,11 @@ class ReturnAction extends DPaypalBaseAction
         \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository,
         \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder,
         \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
-    ) {
+    )
+    {
         parent::__construct($context, $resourceConnection, $localeResolver, $scopeConfig, $transaction,
             $transportBuilder, $order, $dpaypal, $checkoutSession, $transactionRepository, $transactionBuilder, $invoiceSender);
+        $this->context = $context;
     }
 
     /**
@@ -70,6 +77,9 @@ class ReturnAction extends DPaypalBaseAction
                 $this->_redirect('checkout/onepage/success', ['_secure' => true, 'paid' => "1"]);
             } else {
                 $this->checkoutSession->restoreQuote();
+                if(!empty($this->errorMessage)) {
+                    $this->context->getMessageManager()->addErrorMessage($this->errorMessage);
+                }
                 $this->_redirect('checkout/cart', ['_secure' => true]);
             }
         }

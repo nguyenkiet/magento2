@@ -65,6 +65,11 @@ class DPaypalBaseAction extends \Magento\Framework\App\Action\Action
     protected $invoiceSender;
 
     /**
+     * @var string
+     */
+    protected $errorMessage;
+
+    /**
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Magento\Framework\App\ResourceConnection $resourceConnection
      * @param \Magento\Backend\Model\Locale\Resolver $localeResolver
@@ -198,6 +203,7 @@ class DPaypalBaseAction extends \Magento\Framework\App\Action\Action
                 ->getTransport();
             
             //$transport->sendMessage();
+            $this->errorMessage = $digiCore->getErrorMessage();
         }
         return false;
     }

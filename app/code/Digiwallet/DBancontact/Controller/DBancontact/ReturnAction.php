@@ -12,6 +12,11 @@ use Digiwallet\DBancontact\Controller\DBancontactBaseAction;
 class ReturnAction extends DBancontactBaseAction
 {
     /**
+     * @var \Magento\Framework\App\Action\Context
+     */
+    private $context;
+
+    /**
      * @var \Magento\Checkout\Model\Session
      */
     private $checkoutSession;
@@ -48,6 +53,7 @@ class ReturnAction extends DBancontactBaseAction
         parent::__construct($context, $resourceConnection, $localeResolver, $scopeConfig, $transaction,
             $transportBuilder, $order, $dbancontact, $transactionRepository, $transactionBuilder, $invoiceSender);
         $this->checkoutSession = $checkoutSession;
+        $this->context = $context;
     }
 
     /**
@@ -82,6 +88,9 @@ class ReturnAction extends DBancontactBaseAction
             $this->_redirect('checkout/onepage/success', ['_secure' => true]);
         } else {
             $this->checkoutSession->restoreQuote();
+            if(!empty($this->errorMessage)) {
+                $this->context->getMessageManager()->addErrorMessage($this->errorMessage);
+            }
             return $resultRedirect->setPath('checkout/cart');
         }
     }

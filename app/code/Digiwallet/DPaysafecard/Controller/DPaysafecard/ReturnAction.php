@@ -12,6 +12,11 @@ use Digiwallet\DPaysafecard\Controller\DPaysafeBaseAction;
 class ReturnAction extends DPaysafeBaseAction
 {
     /**
+     * @var \Magento\Framework\App\Action\Context
+     */
+    private $context;
+
+    /**
      * @var \Magento\Checkout\Model\Session
      */
     private $checkoutSession;
@@ -48,6 +53,7 @@ class ReturnAction extends DPaysafeBaseAction
         parent::__construct($context, $resourceConnection, $localeResolver, $scopeConfig, $transaction,
             $transportBuilder, $order, $dpaysafecard, $transactionRepository, $transactionBuilder, $invoiceSender);
         $this->checkoutSession = $checkoutSession;
+        $this->context = $context;
     }
 
     /**
@@ -81,6 +87,9 @@ class ReturnAction extends DPaysafeBaseAction
             $this->_redirect('checkout/onepage/success', ['_secure' => true]);
         } else {
             $this->checkoutSession->restoreQuote();
+            if(!empty($this->errorMessage)) {
+                $this->context->getMessageManager()->addErrorMessage($this->errorMessage);
+            }
             return $resultRedirect->setPath('checkout/cart');
         }
     }

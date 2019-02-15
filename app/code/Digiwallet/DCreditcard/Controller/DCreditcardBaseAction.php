@@ -61,6 +61,11 @@ class DCreditcardBaseAction extends \Magento\Framework\App\Action\Action
     protected $invoiceSender;
 
     /**
+     * @var string
+     */
+    protected $errorMessage;
+
+    /**
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Magento\Framework\App\ResourceConnection $resourceConnection
      * @param \Magento\Backend\Model\Locale\Resolver $localeResolver
@@ -228,6 +233,7 @@ class DCreditcardBaseAction extends \Magento\Framework\App\Action\Action
 
             //$transport->sendMessage();
             $this->getResponse()->setBody("Not paid " . $digiCore->getErrorMessage() . "... ");
+            $this->errorMessage = $digiCore->getErrorMessage();
         }
 
         return false;

@@ -17,6 +17,11 @@ class ReturnAction extends DIdealBaseAction
     private $checkoutSession;
 
     /**
+     * @var \Magento\Framework\App\Action\Context
+     */
+    private $context;
+
+    /**
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Magento\Framework\App\ResourceConnection $resourceConnection
      * @param \Magento\Backend\Model\Locale\Resolver $localeResolver
@@ -48,6 +53,7 @@ class ReturnAction extends DIdealBaseAction
             parent::__construct($context, $resourceConnection, $localeResolver, $scopeConfig, $transaction,
                 $transportBuilder, $order, $dideal, $transactionRepository, $transactionBuilder, $invoiceSender);
             $this->checkoutSession = $checkoutSession;
+            $this->context = $context;
     }
 
     /**
@@ -82,6 +88,9 @@ class ReturnAction extends DIdealBaseAction
             $this->_redirect('checkout/onepage/success', ['_secure' => true]);
         } else {
             $this->checkoutSession->restoreQuote();
+            if(!empty($this->errorMessage)) {
+                $this->context->getMessageManager()->addErrorMessage($this->errorMessage);
+            }
             return $resultRedirect->setPath('checkout/cart');
         }
     }
