@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Customer:etc/sections.xsd">
+    <action name="dideal/dideal/return">
+        <section name="cart"/>
+        <section name="checkout-data"/>
+    </action>
+    <action name="dideal/dideal/redirect">
+        <section name="cart"/>
+        <section name="checkout-data"/>
+    </action>
+    <action name="dideal/dideal/report">
+        <section name="cart"/>
+        <section name="checkout-data"/>
+    </action>
+</config>
