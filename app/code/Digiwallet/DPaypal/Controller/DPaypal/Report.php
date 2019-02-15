@@ -97,7 +97,7 @@ class Report extends DPaypalBaseAction
                 ->addTo($currentOrder->getCustomerEmail())
                 ->getTransport();
 
-            $transport->sendMessage();
+            //$transport->sendMessage();
             $this->getResponse()->setBody("Not paid ... ");
         }
         print_r("(Magento, 15-06-2016)");
