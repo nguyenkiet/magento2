@@ -84,6 +84,11 @@ class DAfterpayBaseAction extends \Magento\Framework\App\Action\Action
     protected $transactionBuilder;
 
     /**
+     * @var \Magento\Sales\Model\Order\Email\Sender\InvoiceSender
+     */
+    protected $invoiceSender;
+
+    /**
      *
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Magento\Framework\App\ResourceConnection $resourceConnection
@@ -95,6 +100,7 @@ class DAfterpayBaseAction extends \Magento\Framework\App\Action\Action
      * @param \Digiwallet\DAfterpay\Model\DAfterpay $dafterpay
      * @param \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository
      * @param \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder
+     * @param \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -108,7 +114,8 @@ class DAfterpayBaseAction extends \Magento\Framework\App\Action\Action
         \Digiwallet\DAfterpay\Model\DAfterpay $dafterpay,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository,
-        \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder
+        \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder,
+        \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
     ) {
         parent::__construct($context);
         $this->resoureConnection = $resourceConnection;
@@ -121,6 +128,7 @@ class DAfterpayBaseAction extends \Magento\Framework\App\Action\Action
         $this->dafterpay = $dafterpay;
         $this->transactionRepository = $transactionRepository;
         $this->transactionBuilder = $transactionBuilder;
+        $this->invoiceSender = $invoiceSender;
     }
 
     /**
@@ -193,13 +201,15 @@ class DAfterpayBaseAction extends \Magento\Framework\App\Action\Action
                     $invoice->register()->capture();
                     $this->transaction->addObject($invoice)->addObject($invoice->getOrder())->save();
                     $invoice->setTransactionId($payment->getTransactionId());
+                    $invoice->setCustomerNoteNotify(true);
+                    $invoice->setSendEmail(true);
                     // Save order
                     $currentOrder->setIsInProcess(true);
                     $currentOrder->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
                     $currentOrder->setStatus(\Magento\Sales\Model\Order::STATE_PROCESSING);
                     $currentOrder->addStatusToHistory(\Magento\Sales\Model\Order::STATE_PROCESSING, $payment_message, true);
-                    $invoice->setSendEmail(true);
                     $currentOrder->save();
+                    $this->invoiceSender->send($invoice, true);
                     $this->getResponse()->setBody("Paid... ");
                 } else {
                     $this->getResponse()->setBody("Already completed, skipped... ");
@@ -227,7 +237,7 @@ class DAfterpayBaseAction extends \Magento\Framework\App\Action\Action
                 ->addTo($currentOrder->getCustomerEmail())
                 ->getTransport();
             
-            $transport->sendMessage();
+            //$transport->sendMessage();
         }
         return false;
     }

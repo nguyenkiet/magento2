@@ -53,6 +53,12 @@ class DPaysafeBaseAction extends \Magento\Framework\App\Action\Action
      * @var \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface
      */
     protected $transactionBuilder;
+
+    /**
+     * @var \Magento\Sales\Model\Order\Email\Sender\InvoiceSender
+     */
+    protected $invoiceSender;
+
     /**
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Magento\Framework\App\ResourceConnection $resourceConnection
@@ -64,6 +70,7 @@ class DPaysafeBaseAction extends \Magento\Framework\App\Action\Action
      * @param \Digiwallet\DPaysafecard\Model\DPaysafecard $dpaysafecard
      * @param \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository
      * @param \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder
+     * @param \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -76,7 +83,8 @@ class DPaysafeBaseAction extends \Magento\Framework\App\Action\Action
         \Magento\Sales\Model\Order $order,
         \Digiwallet\DPaysafecard\Model\DPaysafecard $dpaysafecard,
         \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository,
-        \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder
+        \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder,
+        \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
     ) {
         parent::__construct($context);
         $this->resoureConnection = $resourceConnection;
@@ -88,6 +96,7 @@ class DPaysafeBaseAction extends \Magento\Framework\App\Action\Action
         $this->dpaysafecard = $dpaysafecard;
         $this->transactionRepository = $transactionRepository;
         $this->transactionBuilder = $transactionBuilder;
+        $this->invoiceSender = $invoiceSender;
     }
 
     /**
@@ -185,13 +194,16 @@ class DPaysafeBaseAction extends \Magento\Framework\App\Action\Action
                 $invoice->register()->capture();
                 $this->transaction->addObject($invoice)->addObject($invoice->getOrder())->save();
                 $invoice->setTransactionId($payment->getTransactionId());
+                $invoice->setCustomerNoteNotify(true);
+                $invoice->setSendEmail(true);
                 // Save order
                 $currentOrder->setIsInProcess(true);
                 $currentOrder->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
                 $currentOrder->setStatus(\Magento\Sales\Model\Order::STATE_PROCESSING);
                 $currentOrder->addStatusToHistory(\Magento\Sales\Model\Order::STATE_PROCESSING, $payment_message, true);
-                $invoice->setSendEmail(true);
+
                 $currentOrder->save();
+                $this->invoiceSender->send($invoice, true);
                 $this->getResponse()->setBody("Paid... ");
             } else {
                 $this->getResponse()->setBody("Already completed, skipped... ");
@@ -217,7 +229,7 @@ class DPaysafeBaseAction extends \Magento\Framework\App\Action\Action
                 ->addTo($currentOrder->getCustomerEmail())
                 ->getTransport();
 
-            $transport->sendMessage();
+            //$transport->sendMessage();
             $this->getResponse()->setBody("Not paid " . $digiCore->getErrorMessage() . "... ");
         }
         return false;

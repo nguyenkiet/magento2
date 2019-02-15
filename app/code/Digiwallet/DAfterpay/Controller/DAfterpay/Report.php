@@ -23,6 +23,7 @@ class Report extends DAfterpayBaseAction
      * @param \Digiwallet\DAfterpay\Model\DAfterpay $dafterpay
      * @param \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository
      * @param \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder
+     * @param \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -36,9 +37,11 @@ class Report extends DAfterpayBaseAction
         \Digiwallet\DAfterpay\Model\DAfterpay $dafterpay,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository,
-        \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder
+        \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder,
+        \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
     ) {
-        parent::__construct($context, $resourceConnection, $localeResolver, $scopeConfig, $transaction, $transportBuilder, $order, $dafterpay, $checkoutSession, $transactionRepository, $transactionBuilder);
+        parent::__construct($context, $resourceConnection, $localeResolver, $scopeConfig, $transaction,
+            $transportBuilder, $order, $dafterpay, $checkoutSession, $transactionRepository, $transactionBuilder, $invoiceSender);
     }
 
     /**

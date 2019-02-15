@@ -56,6 +56,11 @@ class DCreditcardBaseAction extends \Magento\Framework\App\Action\Action
     protected $transactionBuilder;
 
     /**
+     * @var \Magento\Sales\Model\Order\Email\Sender\InvoiceSender
+     */
+    protected $invoiceSender;
+
+    /**
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Magento\Framework\App\ResourceConnection $resourceConnection
      * @param \Magento\Backend\Model\Locale\Resolver $localeResolver
@@ -66,6 +71,7 @@ class DCreditcardBaseAction extends \Magento\Framework\App\Action\Action
      * @param \Digiwallet\DCreditcard\Model\DCreditcard $dcreditcard
      * @param \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository
      * @param \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder
+     * @param \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -78,7 +84,8 @@ class DCreditcardBaseAction extends \Magento\Framework\App\Action\Action
         \Magento\Sales\Model\Order $order,
         \Digiwallet\DCreditcard\Model\DCreditcard $dcreditcard,
         \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository,
-        \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder
+        \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder,
+        \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
     ) {
         parent::__construct($context);
         $this->resoureConnection = $resourceConnection;
@@ -90,6 +97,7 @@ class DCreditcardBaseAction extends \Magento\Framework\App\Action\Action
         $this->dcreditcard = $dcreditcard;
         $this->transactionRepository = $transactionRepository;
         $this->transactionBuilder = $transactionBuilder;
+        $this->invoiceSender = $invoiceSender;
     }
     /**
      * Need Override and do nothing
@@ -184,13 +192,15 @@ class DCreditcardBaseAction extends \Magento\Framework\App\Action\Action
                 $invoice->register()->capture();
                 $this->transaction->addObject($invoice)->addObject($invoice->getOrder())->save();
                 $invoice->setTransactionId($payment->getTransactionId());
+                $invoice->setCustomerNoteNotify(true);
+                $invoice->setSendEmail(true);
                 // Save order
                 $currentOrder->setIsInProcess(true);
                 $currentOrder->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
                 $currentOrder->setStatus(\Magento\Sales\Model\Order::STATE_PROCESSING);
                 $currentOrder->addStatusToHistory(\Magento\Sales\Model\Order::STATE_PROCESSING, $payment_message, true);
-                $invoice->setSendEmail(true);
                 $currentOrder->save();
+                $this->invoiceSender->send($invoice, true);
                 $this->getResponse()->setBody("Paid... ");
             } else {
                 $this->getResponse()->setBody("Already completed, skipped... ");
@@ -216,7 +226,7 @@ class DCreditcardBaseAction extends \Magento\Framework\App\Action\Action
                 ->addTo($currentOrder->getCustomerEmail())
                 ->getTransport();
 
-            $transport->sendMessage();
+            //$transport->sendMessage();
             $this->getResponse()->setBody("Not paid " . $digiCore->getErrorMessage() . "... ");
         }
 

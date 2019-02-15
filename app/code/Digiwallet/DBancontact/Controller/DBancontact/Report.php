@@ -21,6 +21,7 @@ class Report extends DBancontactBaseAction
      * @param \Digiwallet\DBancontact\Model\DBancontact $dbancontact
      * @param \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository
      * @param \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder
+     * @param \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -33,9 +34,11 @@ class Report extends DBancontactBaseAction
         \Magento\Sales\Model\Order $order,
         \Digiwallet\DBancontact\Model\DBancontact $dbancontact,
         \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository,
-        \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder
+        \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder,
+        \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
     ) {
-        parent::__construct($context, $resourceConnection, $localeResolver, $scopeConfig, $transaction, $transportBuilder, $order, $dbancontact, $transactionRepository, $transactionBuilder);
+        parent::__construct($context, $resourceConnection, $localeResolver, $scopeConfig, $transaction,
+            $transportBuilder, $order, $dbancontact, $transactionRepository, $transactionBuilder, $invoiceSender);
     }
 
     /**

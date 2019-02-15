@@ -21,6 +21,7 @@ class Report extends DBankwireBaseAction
      * @param \Digiwallet\DBankwire\Model\DBankwire $dbankwire
      * @param \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository
      * @param \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder
+     * @param \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -34,9 +35,11 @@ class Report extends DBankwireBaseAction
         \Magento\Checkout\Model\Session $checkoutSession,
         \Digiwallet\DBankwire\Model\DBankwire $dbankwire,
         \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository,
-        \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder
+        \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder,
+        \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
     ) {
-        parent::__construct($context, $resourceConnection, $localeResolver, $scopeConfig, $transaction, $transportBuilder, $order, $dbankwire, $checkoutSession, $transactionRepository, $transactionBuilder);
+        parent::__construct($context, $resourceConnection, $localeResolver, $scopeConfig, $transaction,
+            $transportBuilder, $order, $dbankwire, $checkoutSession, $transactionRepository, $transactionBuilder, $invoiceSender);
     }
     
     /**

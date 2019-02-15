@@ -59,6 +59,12 @@ class DBankwireBaseAction extends \Magento\Framework\App\Action\Action
      * @var \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface
      */
     protected $transactionBuilder;
+
+    /**
+     * @var \Magento\Sales\Model\Order\Email\Sender\InvoiceSender
+     */
+    protected $invoiceSender;
+
     /**
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Magento\Framework\App\ResourceConnection $resourceConnection
@@ -70,6 +76,7 @@ class DBankwireBaseAction extends \Magento\Framework\App\Action\Action
      * @param \Digiwallet\DBankwire\Model\DBankwire $dbankwire
      * @param \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository
      * @param \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder
+     * @param \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -83,7 +90,8 @@ class DBankwireBaseAction extends \Magento\Framework\App\Action\Action
         \Digiwallet\DBankwire\Model\DBankwire $dbankwire,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository,
-        \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder
+        \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder,
+        \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
     ) {
             parent::__construct($context);
             $this->resoureConnection = $resourceConnection;
@@ -96,6 +104,7 @@ class DBankwireBaseAction extends \Magento\Framework\App\Action\Action
             $this->dbankwire = $dbankwire;
             $this->transactionRepository = $transactionRepository;
             $this->transactionBuilder = $transactionBuilder;
+            $this->invoiceSender = $invoiceSender;
     }
     /***
      * Use to check order from target pay
@@ -152,6 +161,7 @@ class DBankwireBaseAction extends \Magento\Framework\App\Action\Action
                 $invoice->register()->capture();
                 $this->transaction->addObject($invoice)->save();
                 $invoice->setTransactionId($txId);
+                $invoice->setCustomerNoteNotify(true);
                 $invoice->setSendEmail(true);
 
                 if ($paymentIsPartial) {
@@ -192,6 +202,7 @@ class DBankwireBaseAction extends \Magento\Framework\App\Action\Action
                 $payment->addTransactionCommentsToOrder($transaction, $payment_message);
                 $payment->save();
 
+                $this->invoiceSender->send($invoice, true);
                 $this->getResponse()->setBody($paymentIsPartial ? 'Partially paid...' : 'Fully paid...');
             } else {
                 $this->getResponse()->setBody("Already completed, skipped... ");
@@ -218,7 +229,7 @@ class DBankwireBaseAction extends \Magento\Framework\App\Action\Action
                 ->addTo($currentOrder->getCustomerEmail())
                 ->getTransport();
             
-            $transport->sendMessage();
+            //$transport->sendMessage();
         }
         return false;
     }

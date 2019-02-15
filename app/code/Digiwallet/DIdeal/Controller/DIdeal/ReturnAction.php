@@ -28,6 +28,7 @@ class ReturnAction extends DIdealBaseAction
      * @param \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository
      * @param \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder
      * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -41,9 +42,11 @@ class ReturnAction extends DIdealBaseAction
         \Digiwallet\DIdeal\Model\DIdeal $dideal,
         \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository,
         \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder,
-        \Magento\Checkout\Model\Session $checkoutSession
+        \Magento\Checkout\Model\Session $checkoutSession,
+        \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
     ) {
-            parent::__construct($context, $resourceConnection, $localeResolver, $scopeConfig, $transaction, $transportBuilder, $order, $dideal, $transactionRepository, $transactionBuilder);
+            parent::__construct($context, $resourceConnection, $localeResolver, $scopeConfig, $transaction,
+                $transportBuilder, $order, $dideal, $transactionRepository, $transactionBuilder, $invoiceSender);
             $this->checkoutSession = $checkoutSession;
     }
 
