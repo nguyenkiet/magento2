@@ -22,6 +22,11 @@ class ReturnAction extends DIdealBaseAction
     private $context;
 
     /**
+     * @var \Magento\Sales\Api\OrderManagementInterface
+     */
+    private $orderManagement;
+
+    /**
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Magento\Framework\App\ResourceConnection $resourceConnection
      * @param \Magento\Backend\Model\Locale\Resolver $localeResolver
@@ -34,6 +39,7 @@ class ReturnAction extends DIdealBaseAction
      * @param \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder
      * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
+     * @param \Magento\Sales\Api\OrderManagementInterface $orderManagement
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -48,12 +54,14 @@ class ReturnAction extends DIdealBaseAction
         \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository,
         \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder,
         \Magento\Checkout\Model\Session $checkoutSession,
-        \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
+        \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender,
+        \Magento\Sales\Api\OrderManagementInterface $orderManagement
     ) {
             parent::__construct($context, $resourceConnection, $localeResolver, $scopeConfig, $transaction,
                 $transportBuilder, $order, $dideal, $transactionRepository, $transactionBuilder, $invoiceSender);
             $this->checkoutSession = $checkoutSession;
             $this->context = $context;
+            $this->orderManagement = $orderManagement;
     }
 
     /**
@@ -87,10 +95,17 @@ class ReturnAction extends DIdealBaseAction
         if ($result) {
             $this->_redirect('checkout/onepage/success', ['_secure' => true]);
         } else {
-            $this->checkoutSession->restoreQuote();
+            $orderIdentityId = $this->checkoutSession->getLastRealOrder()->getId();
             if(!empty($this->errorMessage)) {
                 $this->context->getMessageManager()->addErrorMessage($this->errorMessage);
+                $this->checkoutSession->getLastRealOrder()->addStatusHistoryComment($this->errorMessage);
+                $this->checkoutSession->getLastRealOrder()->save();
             }
+            if(!empty($orderIdentityId)) {
+                $this->orderManagement->cancel($orderIdentityId);
+            }
+            // Restore latest Cart data
+            $this->checkoutSession->restoreQuote();
             return $resultRedirect->setPath('checkout/cart');
         }
     }

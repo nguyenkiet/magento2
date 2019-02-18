@@ -12,6 +12,11 @@ use Digiwallet\DBankwire\Controller\DBankwireBaseAction;
 class ReturnAction extends DBankwireBaseAction
 {
     /**
+     * @var \Magento\Sales\Api\OrderManagementInterface
+     */
+    private $orderManagement;
+
+    /**
      * @var \Magento\Framework\App\Action\Context
      */
     private $context;
@@ -28,6 +33,7 @@ class ReturnAction extends DBankwireBaseAction
      * @param \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository
      * @param \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder
      * @param \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
+     * @param \Magento\Sales\Api\OrderManagementInterface $orderManagement
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -42,11 +48,13 @@ class ReturnAction extends DBankwireBaseAction
         \Digiwallet\DBankwire\Model\DBankwire $dbankwire,
         \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository,
         \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder,
-        \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
+        \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender,
+        \Magento\Sales\Api\OrderManagementInterface $orderManagement
     ) {
             parent::__construct($context, $resourceConnection, $localeResolver, $scopeConfig, $transaction,
                 $transportBuilder, $order, $dbankwire, $checkoutSession, $transactionRepository, $transactionBuilder, $invoiceSender);
             $this->context = $context;
+            $this->orderManagement = $orderManagement;
     }
 
     /**
@@ -78,10 +86,17 @@ class ReturnAction extends DBankwireBaseAction
             if (parent::checkDigiwalletResult($txId, $orderId)) {
                 $this->_redirect('checkout/onepage/success', ['_secure' => true, 'paid' => "1"]);
             } else {
-                $this->checkoutSession->restoreQuote();
+                $orderIdentityId = $this->checkoutSession->getLastRealOrder()->getId();
                 if(!empty($this->errorMessage)) {
                     $this->context->getMessageManager()->addErrorMessage($this->errorMessage);
+                    $this->checkoutSession->getLastRealOrder()->addStatusHistoryComment($this->errorMessage);
+                    $this->checkoutSession->getLastRealOrder()->save();
                 }
+                if(!empty($orderIdentityId)) {
+                    $this->orderManagement->cancel($orderIdentityId);
+                }
+                // Restore latest Cart data
+                $this->checkoutSession->restoreQuote();
                 $this->_redirect('checkout/cart', ['_secure' => true]);
             }
         }
