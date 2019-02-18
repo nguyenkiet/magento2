@@ -86,14 +86,18 @@ class ReturnAction extends DBankwireBaseAction
             if (parent::checkDigiwalletResult($txId, $orderId)) {
                 $this->_redirect('checkout/onepage/success', ['_secure' => true, 'paid' => "1"]);
             } else {
-                $orderIdentityId = $this->checkoutSession->getLastRealOrder()->getId();
-                if(!empty($this->errorMessage)) {
-                    $this->context->getMessageManager()->addErrorMessage($this->errorMessage);
-                    $this->checkoutSession->getLastRealOrder()->addStatusHistoryComment($this->errorMessage);
-                    $this->checkoutSession->getLastRealOrder()->save();
-                }
-                if(!empty($orderIdentityId)) {
-                    $this->orderManagement->cancel($orderIdentityId);
+                try{
+                    $orderIdentityId = $this->checkoutSession->getLastRealOrder()->getId();
+                    if(!empty($this->errorMessage)) {
+                        $this->context->getMessageManager()->addErrorMessage($this->errorMessage);
+                        $this->checkoutSession->getLastRealOrder()->addStatusHistoryComment($this->errorMessage);
+                        $this->checkoutSession->getLastRealOrder()->save();
+                    }
+                    if(!empty($orderIdentityId)) {
+                        $this->orderManagement->cancel($orderIdentityId);
+                    }
+                } catch (\Exception $exception) {
+                    // Do nothing
                 }
                 // Restore latest Cart data
                 $this->checkoutSession->restoreQuote();

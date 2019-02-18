@@ -84,15 +84,20 @@ class ReturnAction extends DPaypalBaseAction
             if (parent::checkDigiwalletResult($txId, $orderId)) {
                 $this->_redirect('checkout/onepage/success', ['_secure' => true, 'paid' => "1"]);
             } else {
-                $orderIdentityId = $this->checkoutSession->getLastRealOrder()->getId();
-                if(!empty($this->errorMessage)) {
-                    $this->context->getMessageManager()->addErrorMessage($this->errorMessage);
-                    $this->checkoutSession->getLastRealOrder()->addStatusHistoryComment($this->errorMessage);
-                    $this->checkoutSession->getLastRealOrder()->save();
+                try{
+                    $orderIdentityId = $this->checkoutSession->getLastRealOrder()->getId();
+                    if(!empty($this->errorMessage)) {
+                        $this->context->getMessageManager()->addErrorMessage($this->errorMessage);
+                        $this->checkoutSession->getLastRealOrder()->addStatusHistoryComment($this->errorMessage);
+                        $this->checkoutSession->getLastRealOrder()->save();
+                    }
+                    if(!empty($orderIdentityId)) {
+                        $this->orderManagement->cancel($orderIdentityId);
+                    }
+                } catch (\Exception $exception) {
+                    // Do nothing
                 }
-                if(!empty($orderIdentityId)) {
-                    $this->orderManagement->cancel($orderIdentityId);
-                }
+
                 // Restore latest Cart data
                 $this->checkoutSession->restoreQuote();
                 $this->_redirect('checkout/cart', ['_secure' => true]);

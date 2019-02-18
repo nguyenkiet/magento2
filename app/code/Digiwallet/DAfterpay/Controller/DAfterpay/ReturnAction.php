@@ -102,9 +102,13 @@ class ReturnAction extends DAfterpayBaseAction
                         $this->messageManager->addExceptionMessage(new \Exception(), __((is_array($message)) ? implode(", ", $message) : $message));
                     }
                 }
-                $orderIdentityId = $this->checkoutSession->getLastRealOrder()->getId();
-                if(!empty($orderIdentityId)) {
-                    $this->orderManagement->cancel($orderIdentityId);
+                try{
+                    $orderIdentityId = $this->checkoutSession->getLastRealOrder()->getId();
+                    if(!empty($orderIdentityId)) {
+                        $this->orderManagement->cancel($orderIdentityId);
+                    }
+                } catch (\Exception $exception) {
+                    // Do nothing
                 }
                 $this->checkoutSession->restoreQuote();
                 $this->_redirect('checkout/cart', [

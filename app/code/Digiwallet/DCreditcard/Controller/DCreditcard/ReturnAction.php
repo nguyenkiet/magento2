@@ -95,14 +95,18 @@ class ReturnAction extends DCreditcardBaseAction
         if ($result) {
             $this->_redirect('checkout/onepage/success', ['_secure' => true]);
         } else {
-            $orderIdentityId = $this->checkoutSession->getLastRealOrder()->getId();
-            if(!empty($this->errorMessage)) {
-                $this->context->getMessageManager()->addErrorMessage($this->errorMessage);
-                $this->checkoutSession->getLastRealOrder()->addStatusHistoryComment($this->errorMessage);
-                $this->checkoutSession->getLastRealOrder()->save();
-            }
-            if(!empty($orderIdentityId)) {
-                $this->orderManagement->cancel($orderIdentityId);
+            try{
+                $orderIdentityId = $this->checkoutSession->getLastRealOrder()->getId();
+                if(!empty($this->errorMessage)) {
+                    $this->context->getMessageManager()->addErrorMessage($this->errorMessage);
+                    $this->checkoutSession->getLastRealOrder()->addStatusHistoryComment($this->errorMessage);
+                    $this->checkoutSession->getLastRealOrder()->save();
+                }
+                if(!empty($orderIdentityId)) {
+                    $this->orderManagement->cancel($orderIdentityId);
+                }
+            } catch (\Exception $exception) {
+                // Do nothing
             }
             // Restore latest Cart data
             $this->checkoutSession->restoreQuote();
