@@ -3,8 +3,10 @@
 	<div class="payment-method-title field choice">
 		<input type="radio" name="payment[method]" class="radio"
 			data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()" />
-		<label data-bind="attr: {'for': getCode()}" class="label"><span
-			data-bind="text: getTitle()"></span></label>
+		<label data-bind="attr: {'for': getCode()}" class="label">
+			<img class="digiwallet-payment-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIkAAAAYCAYAAADOHt4vAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3ggcCScMEv2x2AAABDBJREFUaN7tmj9y4koQxn92bf4UE7C6wROJ0oUTGE5gOIFNotSQKgGfwPgExiewYiWrd4KVCYi1J3gbaISHYUYjGdlbBn1VLleJ1tDd8/VfG1q0sOBCfbCh4wBj4Ep6nAKPXbZR67IzJ8mGjge8AI5BftVlO2nddqYk0RAkET8u0JfeWXbZTs/ec2HsAAvhnxyBPzgxG/sEfvRNerQQBMmASZftWilBD8AQuN3QeW5LDz/3CHKaeAEuLgUJ5GwxkgkC0GWbddmOgIIY12eeRfpnQJAdLsXvwuC1JUPMFfkWOSbA4FSNk8vNEvi9oTOzvDMH/imJMk+UJRUpsCbwMyHniinKhASIjPKBP1Miu8iEEYEfSZ8NAc/wHSmBv6qty6FdrviJpH5laAimff3ser7Jh3HZ3WTCv6nmbNm+1U4mfz4sGVT2SJKKQ5yK5FoaCLIAbkveWxDGPaGkC9xZvicrkZcd1lc+K5z6ojTdhxcAq4q6pEIXlSjyuzNBkF8lvrwjjFcE/kTy24PQ8/GIgP9XnN3bI0pOvgdh528lsJ6ANfBahSR1CIIgwtTwvAwOcGN4twl5NaP1G8y6RTQuLXJVfDkmjOcEfirp2TNkKrTZU2/zqyDsZI+UMCHw1wcBC3MCf1ly3p1Mkh91Pbah09/rX3Jmqmk4lSK9gCelR1P/o5OvC0dTMjLNszq6OIY0n1T4XlcpP67wjyPKXtYAkSNNRvQ0BCme9+r2JE2jJ/UTswPlAz8BBiW1uMkskJY65E2XsaaPcCxETUr2I3lZyQPo2tL31MmQw7/VuDaLKpGR1+LxJ9jpEsb/H1wgTCUi/zwia5ngEca/GpsGTf3FG75/LZLYDXY/mCBphd4hA6Yi0r0P0MEzlIRH7YRjxwIYGd/N7bg7HZIcRtdSio7ro6MvbwonIvLqXKKqy03Npt40nq6Ae+2IWsdn7yPXlyWJeqlTKSJoJCLyHchaIcONpaYnDeqSiglidSrLtKbLyRPwn3QxdeSvKvYzr+SLvXGNcmbLUJ50djXdyycs17AEWx2ZVT66HXBUkiTvmCYSy+dDzJtXNOOoTT7V9BS2cvbeDNBUr+SU6BBJawKPMHYqNPspYeyWkKtOWbSdNS7WAgVJnrEvwvYM7LJ9z1yfAfe7sTOMkwoN46PUY6wbHv/ulV2GU6GvsGFVq4/J7YqAF8J4rgmeTIzohb6FXKoJigX7izSbX01nXQk+jHYk6bKNNnQGFY17ruisSJMR7iWDIf+j2C36ZV4m5CPJoSPC+FZTjlxNGSlbkCHOXu/G9TDuCfs9QzaTm0757ERz6YUvXQvpVLuu0S/jEiG3JIxTg1xmmHwiAzlnIkh1Z6XAoDjrosEa1if//4NCiQs+A3ntfJLK5dy6vm7xRaebuiRs8Wm4PEGbkvZaW5KUYWn4Y1aLI/AHjc2f+NFZ7w0AAAAASUVORK5CYII=">
+			<span data-bind="text: getTitle()"></span>
+		</label>
 	</div>
 	<div class="payment-method-content">
 		<div class="payment-method-billing-address">
