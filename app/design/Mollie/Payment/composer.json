@@ -1,0 +1,23 @@
+{
+  "name": "mollie/magento2",
+  "description": "Mollie Payment Module for Magento 2",
+  "version": "1.4.7",
+  "require": {
+    "mollie/mollie-api-php": "^2.1",
+    "magento/framework": ">=100.1.0",
+    "ext-json": "*"
+  },
+  "type": "magento2-module",
+  "license": [
+    "OSL-3.0",
+    "AFL-3.0"
+  ],
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "Mollie\\Payment\\": ""
+    }
+  }
+}
