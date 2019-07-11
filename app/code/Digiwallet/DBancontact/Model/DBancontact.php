@@ -222,14 +222,23 @@ class DBancontact extends \Magento\Payment\Model\Method\AbstractMethod
         );
         $digiCore->setAmount(round($order->getGrandTotal() * 100));
         $digiCore->setDescription("Order #$orderId");
-//         $digiCore->setBankId($bankId);
+        //$digiCore->setBankId($bankId);
         $digiCore->setReturnUrl(
             $this->urlBuilder->getUrl('dbancontact/dbancontact/return', ['_secure' => true, 'order_id' => $orderId])
         );
         $digiCore->setReportUrl(
             $this->urlBuilder->getUrl('dbancontact/dbancontact/report', ['_secure' => true, 'order_id' => $orderId, 'ajax' => 1])
         );
-        
+        // Get consumer's email
+        $consumerEmail = $order->getCustomerEmail();
+        if(empty($consumerEmail) && $order->getBillingAddress() != null) {
+            $consumerEmail = $order->getBillingAddress()->getEmail();
+        }
+        if(empty($consumerEmail) && $order->getShippingAddress() != null) {
+            $consumerEmail = $order->getShippingAddress()->getEmail();
+        }
+        $digiCore->setConsumerEmail($consumerEmail);
+
         $bankUrl = @$digiCore->startPayment();
 
         if (!$bankUrl) {

@@ -481,6 +481,16 @@ class DAfterpay extends \Magento\Payment\Model\Method\AbstractMethod
         $digiCore->bindParam('shippingpersonphonenumber', self::format_phone($shippingCountry, $shippingAddress == null ? "" : $shippingAddress->getTelephone()));
         // Add house number for shipping address
         $digiCore->bindParam('shippinghousenumber', (!empty($streetParts['houseNumber']) || !empty($streetParts['houseNumberAdd'])) ? ($streetParts['houseNumber'] . ' ' . $streetParts['houseNumberAdd']) : $shipping_address_1);
+        // Get consumer's email
+        $consumerEmail = $order->getCustomerEmail();
+        if(empty($consumerEmail) && $order->getBillingAddress() != null) {
+            $consumerEmail = $order->getBillingAddress()->getEmail();
+        }
+        if(empty($consumerEmail) && $order->getShippingAddress() != null) {
+            $consumerEmail = $order->getShippingAddress()->getEmail();
+        }
+        $digiCore->setConsumerEmail($consumerEmail);
+
         // Start payment
         $result = @$digiCore->startPayment();
 

@@ -229,7 +229,16 @@ class DIdeal extends \Magento\Payment\Model\Method\AbstractMethod
         $digiCore->setReportUrl(
             $this->urlBuilder->getUrl('dideal/dideal/report', ['_secure' => true, 'order_id' => $orderId, 'ajax' => 1])
         );
-        
+        // Get consumer's email
+        $consumerEmail = $order->getCustomerEmail();
+        if(empty($consumerEmail) && $order->getBillingAddress() != null) {
+            $consumerEmail = $order->getBillingAddress()->getEmail();
+        }
+        if(empty($consumerEmail) && $order->getShippingAddress() != null) {
+            $consumerEmail = $order->getShippingAddress()->getEmail();
+        }
+        $digiCore->setConsumerEmail($consumerEmail);
+
         $bankUrl = @$digiCore->startPayment();
 
         if (!$bankUrl) {

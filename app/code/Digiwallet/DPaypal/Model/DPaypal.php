@@ -232,6 +232,15 @@ class DPaypal extends \Magento\Payment\Model\Method\AbstractMethod
         
         $digiCore->bindParam('email', $order->getCustomerEmail());
         $digiCore->bindParam('userip', $_SERVER["REMOTE_ADDR"]);
+        // Get consumer's email
+        $consumerEmail = $order->getCustomerEmail();
+        if(empty($consumerEmail) && $order->getBillingAddress() != null) {
+            $consumerEmail = $order->getBillingAddress()->getEmail();
+        }
+        if(empty($consumerEmail) && $order->getShippingAddress() != null) {
+            $consumerEmail = $order->getShippingAddress()->getEmail();
+        }
+        $digiCore->setConsumerEmail($consumerEmail);
 
         $url = @$digiCore->startPayment();
 

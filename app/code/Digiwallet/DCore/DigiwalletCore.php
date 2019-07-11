@@ -229,6 +229,12 @@ class DigiwalletCore
     private $refundResponse = null;
 
     /**
+     * The consumer's email address
+     * @var string
+     */
+    private $consumerEmail = null;
+
+    /**
      *
      * @param string $payMethod
      * @param string $rtlo
@@ -377,6 +383,7 @@ class DigiwalletCore
             "EN",
             "DE"
         ), "DE")) : "");
+        $url .= "&email=" . (!empty($this->consumerEmail) ? urlencode($this->consumerEmail) : "");
 
         // Another parameter
         if (is_array($this->parameters)) {
@@ -951,5 +958,23 @@ class DigiwalletCore
     public function getTransactionId()
     {
         return $this->transactionId;
+    }
+
+    /**
+     * Set the consumer's email address
+     * @param $email string
+     */
+    public function setConsumerEmail($email)
+    {
+        $this->consumerEmail = $email;
+    }
+
+    /**
+     * Retrieve the consumer's email address
+     * @return string
+     */
+    public function getConsumerEmail()
+    {
+        return $this->consumerEmail;
     }
 }
