@@ -383,7 +383,9 @@ class DigiwalletCore
             "EN",
             "DE"
         ), "DE")) : "");
-        $url .= "&email=" . (!empty($this->consumerEmail) ? urlencode($this->consumerEmail) : "");
+        if(!empty($this->consumerEmail)) {
+            $url .= "&email=" . urlencode($this->consumerEmail);
+        }
 
         // Another parameter
         if (is_array($this->parameters)) {
